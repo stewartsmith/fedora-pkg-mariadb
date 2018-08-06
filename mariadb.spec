@@ -154,7 +154,7 @@
 
 Name:             mariadb
 Version:          10.5.8
-Release:          3%{?with_debug:.debug}%{?dist}
+Release:          4%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1017,6 +1017,11 @@ mkdir -p %{buildroot}%{logrotateddir}
 mv %{buildroot}%{_datadir}/%{pkg_name}/mysql-log-rotate %{buildroot}%{logrotateddir}/%{daemon_name}
 chmod 644 %{buildroot}%{logrotateddir}/%{daemon_name}
 
+# for compatibility with upstream RPMs, create mysqld symlink in sbin
+mkdir -p %{buildroot}%{_sbindir}
+ln -s %{_libexecdir}/mysqld %{buildroot}%{_sbindir}/mysqld
+ln -s %{_libexecdir}/mariadbd %{buildroot}%{_sbindir}/mariadbd
+
 # copy additional docs into build tree so %%doc will find them
 install -p -m 0644 %{SOURCE5} %{basename:%{SOURCE5}}
 install -p -m 0644 %{SOURCE6} %{basename:%{SOURCE6}}
@@ -1397,6 +1402,8 @@ fi
 %config(noreplace) %{_sysconfdir}/my.cnf.d/enable_encryption.preset
 %config(noreplace) %{_sysconfdir}/my.cnf.d/spider.cnf
 
+%{_sbindir}/mysqld
+%{_sbindir}/mariadbd
 %{_libexecdir}/{mysqld,mariadbd}
 
 %{_libdir}/%{pkg_name}/INFO_SRC
@@ -1622,6 +1629,9 @@ fi
 %endif
 
 %changelog
+* Thu Jan 28 2021 Honza Horak <hhorak@redhat.com> - 3:10.5.8-4
+- For compatibility with upstream RPMs, create mysqld symlink in sbin
+
 * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3:10.5.8-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
