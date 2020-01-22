@@ -146,8 +146,8 @@
 %global sameevr   %{epoch}:%{version}-%{release}
 
 Name:             mariadb
-Version:          10.4.12
-Release:          5%{?with_debug:.debug}%{?dist}
+Version:          10.5.0
+Release:          1%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -199,6 +199,8 @@ Patch13:          %{pkgnamepatch}-spider_on_armv7hl.patch
 Patch15:          %{pkgnamepatch}-groonga.patch
 #   Patch16: Workaround for "chown 0" with priviledges dropped to "mysql" user
 Patch16:          %{pkgnamepatch}-auth_pam_tool_dir.patch
+#   Patch17: Fix of an upstream bug. Fixed in the next (10.5.1) version.
+Patch17:          %{pkgnamepatch}-10.5.0-libsql_builtins.patch
 
 BuildRequires:    cmake gcc-c++
 BuildRequires:    multilib-rpm-config
@@ -703,9 +705,10 @@ rm -rf libmariadb/unittest
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
-%patch13 -p1
+#%patch13 -p1
 %patch15 -p1
 %patch16 -p1
+%patch17 -p1
 
 # workaround for upstream bug #56342
 #rm mysql-test/t/ssl_8k_key-master.opt
@@ -1592,6 +1595,9 @@ fi
 %endif
 
 %changelog
+* Thu Apr 09 2020 Michal Schorm <mschorm@redhat.com> - 10.5.0-1
+- Test rebase to 10.5.0 - Alpha
+
 * Thu Apr 02 2020 Björn Esser <besser82@fedoraproject.org> - 3:10.4.12-5
 - Fix string quoting for rpm >= 4.16
 
