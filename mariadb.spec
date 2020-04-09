@@ -28,9 +28,10 @@
 
 
 
-# TokuDB engine
+# TokuDB engine - DEPRECATED !
 #   https://mariadb.com/kb/en/mariadb/tokudb/
 #   TokuDB engine is available only for x86_64
+#   The Percona upstream deprecated the SE. It is not part of MariaDB 10.5
 # Mroonga engine
 #   https://mariadb.com/kb/en/mariadb/about-mroonga/
 #   Current version in MariaDB, 7.07, only supports the x86_64
@@ -40,7 +41,8 @@
 #   RocksDB engine is available only for x86_64
 #   RocksDB may be built with jemalloc, if specified in CMake
 %if "%_arch" == "x86_64" && 0%{?fedora}
-%bcond_without tokudb
+# TokuDB is deprecated in MariaDB 10.5 and later
+%bcond_with tokudb
 %bcond_without mroonga
 %bcond_without rocksdb
 %else
@@ -146,7 +148,7 @@
 %global sameevr   %{epoch}:%{version}-%{release}
 
 Name:             mariadb
-Version:          10.5.1
+Version:          10.5.2
 Release:          1%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
@@ -990,6 +992,10 @@ rm %{buildroot}%{_datadir}/%{pkg_name}/mysqld_multi.server
 # Binary for monitoring MySQL performance
 # Shipped as a standalone package in Fedora
 rm %{buildroot}%{_bindir}/mytop
+rm %{buildroot}%{_mandir}/man1/mytop.1*
+
+# Should be shipped with mariadb-connector-c
+rm %{buildroot}%{_mandir}/man1/mariadb-config.1*
 
 # put logrotate script where it needs to be
 mkdir -p %{buildroot}%{logrotateddir}
@@ -1398,6 +1404,8 @@ fi
 %{_mandir}/man1/myisam_ftdump.1*
 %{_mandir}/man1/my_print_defaults.1*
 
+%{_mandir}/man1/mariadb-conv.1*
+
 %{_mandir}/man1/mysql_{install_db,secure_installation,tzinfo_to_sql}.1*
 %{_mandir}/man1/mariadb-{install-db,secure-installation,tzinfo-to-sql}.1*
 %{_mandir}/man1/{mysqld_,mariadbd-}safe.1*
@@ -1487,6 +1495,7 @@ fi
 %{_bindir}/sst_dump
 %{_libdir}/%{pkg_name}/plugin/ha_rocksdb.so
 %{_mandir}/man1/{mysql_,mariadb-}ldb.1*
+%{_mandir}/man1/myrocks_hotbackup.1*
 %endif
 
 %if %{with tokudb}
@@ -1587,6 +1596,10 @@ fi
 %endif
 
 %changelog
+* Thu Apr 09 2020 Michal Schorm <mschorm@redhat.com> - 10.5.2-1
+- Test rebase to 10.5.2 - Beta
+- TokuDB SE has been deprecated
+
 * Thu Apr 09 2020 Michal Schorm <mschorm@redhat.com> - 10.5.1-1
 - Test rebase to 10.5.1 - Beta
 

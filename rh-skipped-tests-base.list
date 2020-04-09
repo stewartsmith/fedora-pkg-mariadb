@@ -37,3 +37,6 @@ sys_vars.tcp_nodelay                         :
 
 # Fails on i686
 encryption.innodb-redo-badkey                :
+
+# Fails since 10.5.2
+main.mysqld--help2                           :
