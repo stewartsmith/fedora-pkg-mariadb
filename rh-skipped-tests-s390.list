@@ -1,4 +1,2 @@
-# Fails since 10.2.15
-disks.disks                    :
-# Fails since 10.4.11
-disks.disks_notembedded        :
+# Fails since 10.5.2
+perfschema.memory_aggregate_32bit :
