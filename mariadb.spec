@@ -1152,6 +1152,7 @@ rm %{buildroot}%{_datadir}/%{pkg_name}/systemd/use_galera_new_cluster.conf
 
 %if %{without rocksdb}
 rm %{buildroot}%{_mandir}/man1/{mysql_,mariadb-}ldb.1*
+rm %{buildroot}%{_mandir}/man1/myrocks_hotbackup.1*
 %endif
 
 %check
