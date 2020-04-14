@@ -1025,7 +1025,7 @@ rm %{buildroot}%{logrotateddir}/mysql
 rm -r %{buildroot}%{_datadir}/%{pkg_name}/policy/apparmor
 
 # Buildroot does not have symlink /lib64 --> /usr/lib64
-%if "%{__isa_bits}" == 64 && 0%{?fedora}
+%if %{__isa_bits} == 64 && 0%{?fedora}
 mv %{buildroot}/lib64/security %{buildroot}%{_libdir}
 %else
 mv %{buildroot}/lib/security %{buildroot}%{_libdir}
@@ -1160,7 +1160,7 @@ rm %{buildroot}%{_mandir}/man1/{mysql_,mariadb-}ldb.1*
 # hack to let 32- and 64-bit tests run concurrently on same build machine
 export MTR_PARALLEL=1
 # builds might happen at the same host, avoid collision
-export MTR_BUILD_THREAD="%{__isa_bits}"
+export MTR_BUILD_THREAD=%{__isa_bits}
 
 # The cmake build scripts don't provide any simple way to control the
 # options for mysql-test-run, so ignore the make target and just call it
