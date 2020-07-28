@@ -146,7 +146,7 @@
 
 Name:             mariadb
 Version:          10.4.13
-Release:          3%{?with_debug:.debug}%{?dist}
+Release:          4%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1577,6 +1577,9 @@ fi
 %endif
 
 %changelog
+* Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 3:10.4.13-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
 * Tue Jul 14 2020 Michal Schorm <mschorm@redhat.com> - 10.4.13-3
 - Make conflicts between corresponding mariadb and mysql packages explicit
 - Get rid of the Conflicts macro, it was intended to mark conflicts with
