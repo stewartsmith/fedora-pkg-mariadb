@@ -107,7 +107,7 @@
 %bcond_without unbundled_pcre
 %else
 %bcond_with unbundled_pcre
-%global pcre_bundled_version 8.43
+%global pcre_bundled_version 8.44
 %endif
 
 # Use main python interpretter version
