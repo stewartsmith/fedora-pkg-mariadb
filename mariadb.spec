@@ -39,7 +39,8 @@
 #   https://mariadb.com/kb/en/library/about-myrocks-for-mariadb/
 #   RocksDB engine is available only for x86_64
 #   RocksDB may be built with jemalloc, if specified in CMake
-%ifarch x86_64 && 0%{?fedora}
+%ifarch x86_64
+%if 0%{?fedora}
 %bcond_without tokudb
 %bcond_without mroonga
 %bcond_without rocksdb
@@ -47,6 +48,7 @@
 %bcond_with tokudb
 %bcond_with mroonga
 %bcond_with rocksdb
+%endif
 %endif
 
 # The Open Query GRAPH engine (OQGRAPH) is a computation engine allowing
