@@ -1346,6 +1346,7 @@ fi
 %{_bindir}/mysql_{install_db,secure_installation,tzinfo_to_sql}
 %{_bindir}/mariadb-{install-db,secure-installation,tzinfo-to-sql}
 %{_bindir}/{mysqld_,mariadbd-}safe
+%{_bindir}/{mysqld_safe_helper,mariadbd-safe-helper}
 
 %{_bindir}/innochecksum
 %{_bindir}/replace
@@ -1397,6 +1398,7 @@ fi
 %{_mandir}/man1/mysql_{install_db,secure_installation,tzinfo_to_sql}.1*
 %{_mandir}/man1/mariadb-{install-db,secure-installation,tzinfo-to-sql}.1*
 %{_mandir}/man1/{mysqld_,mariadbd-}safe.1*
+%{_mandir}/man1/{mysqld_safe_helper,mariadbd-safe-helper}.1*
 
 %{_mandir}/man1/innochecksum.1*
 %{_mandir}/man1/replace.1*
@@ -1533,9 +1535,6 @@ fi
 %{_bindir}/perror
 %{_mandir}/man1/{mysql_,mariadb-}upgrade.1*
 %{_mandir}/man1/perror.1*
-# Other utilities
-%{_bindir}/{mysqld_safe_helper,mariadbd-safe-helper}
-%{_mandir}/man1/{mysqld_safe_helper,mariadbd-safe-helper}.1*
 
 %if %{with devel}
 %files devel
