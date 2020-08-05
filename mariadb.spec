@@ -146,7 +146,7 @@
 
 Name:             mariadb
 Version:          10.4.13
-Release:          5%{?with_debug:.debug}%{?dist}
+Release:          6%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -759,6 +759,10 @@ fi
 
 
 %build
+# This package has static probe points which do not currently
+# work with LTO and result in undefined symbols at link time.
+# This is being worked on in upstream GCC
+%define _lto_cflags %{nil}
 %{set_build_flags}
 
 # fail quickly and obviously if user tries to build as root
@@ -1577,6 +1581,9 @@ fi
 %endif
 
 %changelog
+* Wed Aug 05 2020 Jeff Law <law@redhat.com> - 3:10.4.13-6
+- Disable LTO
+
 * Sat Aug 01 2020 Fedora Release Engineering <releng@fedoraproject.org> - 3:10.4.13-5
 - Second attempt - Rebuilt for
   https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
