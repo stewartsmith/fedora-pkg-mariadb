@@ -1,3 +1,7 @@
+#   This is a fix for the https://fedoraproject.org/wiki/Changes/CMake_to_do_out-of-source_builds
+#   So the beaviour will be the same also in F31 nad F32
+%undefine __cmake_in_source_build
+
 # Prefix that is used for patches
 %global pkg_name %{name}
 %global pkgnamepatch mariadb
@@ -148,7 +152,7 @@
 
 Name:             mariadb
 Version:          10.4.13
-Release:          6%{?with_debug:.debug}%{?dist}
+Release:          7%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -765,7 +769,6 @@ fi
 # work with LTO and result in undefined symbols at link time.
 # This is being worked on in upstream GCC
 %define _lto_cflags %{nil}
-%{set_build_flags}
 
 # fail quickly and obviously if user tries to build as root
 %if %runselftest
@@ -776,38 +779,6 @@ fi
         exit 1
     fi
 %endif
-
-CFLAGS="$CFLAGS -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
-# force PIC mode so that we can build libmysqld.so
-CFLAGS="$CFLAGS -fPIC"
-
-%if %{with debug}
-# Override all optimization flags when making a debug build
-# -D_FORTIFY_SOURCE requires optimizations enabled. Disable the fortify.
-CFLAGS=`echo "$CFLAGS" | sed -r 's/-D_FORTIFY_SOURCE=[012]/-D_FORTIFY_SOURCE=0/'`
-CFLAGS=`echo "$CFLAGS" | sed -r 's/-O[0123]//'`
-
-CFLAGS="$CFLAGS -O0 -g -D_FORTIFY_SOURCE=0"
-
-# Fixes for Fedora 32 & Rawhide (GCC 10.0):
-%if 0%{?fedora} >= 32
-CFLAGS="$CFLAGS -Wno-error=class-memaccess"
-%endif # f32
-
-%endif # debug
-
-CXXFLAGS="$CFLAGS"
-CPPFLAGS="$CFLAGS"
-
-# CFLAGS specific "-Wno-error"
-%if %{with debug}
-%if 0%{?fedora} >= 32
-CFLAGS="$CFLAGS -Wno-error=enum-conversion"
-%endif # f32
-%endif # debug
-
-export CFLAGS CXXFLAGS CPPFLAGS
-
 
 # The INSTALL_xxx macros have to be specified relative to CMAKE_INSTALL_PREFIX
 # so we can't use %%{_datadir} and so forth here.
@@ -873,12 +844,35 @@ export CFLAGS CXXFLAGS CPPFLAGS
          -DCONNECT_WITH_JDBC=OFF \
 %{?with_debug: -DCMAKE_BUILD_TYPE=Debug -DWITH_ASAN=OFF -DWITH_INNODB_EXTRA_DEBUG=ON -DWITH_VALGRIND=ON}
 
-# Print all Cmake options values
-# cmake ./ -LAH for List Advanced Help
-cmake ./ -L
 
-%make_build VERBOSE=1
+CFLAGS="$CFLAGS -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
+# force PIC mode so that we can build libmysqld.so
+CFLAGS="$CFLAGS -fPIC"
 
+%if %{with debug}
+# Override all optimization flags when making a debug build
+# -D_FORTIFY_SOURCE requires optimizations enabled. Disable the fortify.
+CFLAGS=`echo "$CFLAGS" | sed -r 's/-D_FORTIFY_SOURCE=[012]/-D_FORTIFY_SOURCE=0/'`
+CFLAGS=`echo "$CFLAGS" | sed -r 's/-O[0123]//'`
+
+CFLAGS="$CFLAGS -O0 -g -D_FORTIFY_SOURCE=0"
+
+# Fixes for Fedora 32 & Rawhide (GCC 10.0):
+%if 0%{?fedora} >= 32
+CFLAGS="$CFLAGS -Wno-error=class-memaccess"
+CFLAGS="$CFLAGS -Wno-error=enum-conversion"
+%endif # f32
+%endif # debug
+
+CXXFLAGS="$CFLAGS"
+CPPFLAGS="$CFLAGS"
+export CFLAGS CXXFLAGS CPPFLAGS
+
+
+# Print all Cmake options values; "-LAH" means "List Advanced Help"
+cmake -B %{_vpath_builddir} -LAH
+
+%cmake_build
 
 # build selinux policy
 %if %{with galera}
@@ -886,8 +880,10 @@ pushd selinux
 make -f /usr/share/selinux/devel/Makefile %{name}-server-galera.pp
 %endif
 
+
+
 %install
-%make_install
+%cmake_install
 
 # multilib header support #1625157
 for header in mysql/server/my_config.h mysql/server/private/config.h; do
@@ -901,7 +897,7 @@ ln -s mysql_config.1.gz %{buildroot}%{_mandir}/man1/mariadb_config.1.gz
 if [ %multilib_capable ]
 then
 mv %{buildroot}%{_bindir}/mysql_config %{buildroot}%{_bindir}/mysql_config-%{__isa_bits}
-install -p -m 0755 scripts/mysql_config_multilib %{buildroot}%{_bindir}/mysql_config
+install -p -m 0755 %{_vpath_builddir}/scripts/mysql_config_multilib %{buildroot}%{_bindir}/mysql_config
 # Copy manual page for multilib mysql_config; https://jira.mariadb.org/browse/MDEV-11961
 ln -s mysql_config.1 %{buildroot}%{_mandir}/man1/mysql_config-%{__isa_bits}.1
 fi
@@ -913,8 +909,8 @@ rm %{buildroot}%{_libdir}/pkgconfig/libmariadb.pc
 
 # install INFO_SRC, INFO_BIN into libdir (upstream thinks these are doc files,
 # but that's pretty wacko --- see also %%{name}-file-contents.patch)
-install -p -m 644 Docs/INFO_SRC %{buildroot}%{_libdir}/%{pkg_name}/
-install -p -m 644 Docs/INFO_BIN %{buildroot}%{_libdir}/%{pkg_name}/
+install -p -m 644 %{_vpath_builddir}/Docs/INFO_SRC %{buildroot}%{_libdir}/%{pkg_name}/
+install -p -m 644 %{_vpath_builddir}/Docs/INFO_BIN %{buildroot}%{_libdir}/%{pkg_name}/
 rm -r %{buildroot}%{_datadir}/doc/%{_pkgdocdirname}/MariaDB-server-%{version}/
 
 # Logfile creation
@@ -929,9 +925,9 @@ mkdir -p %{buildroot}%{pidfiledir}
 install -p -m 0755 -d %{buildroot}%{dbdatadir}
 
 %if %{with config}
-install -D -p -m 0644 scripts/my.cnf %{buildroot}%{_sysconfdir}/my.cnf
+install -D -p -m 0644 %{_vpath_builddir}/scripts/my.cnf %{buildroot}%{_sysconfdir}/my.cnf
 %else
-rm scripts/my.cnf
+rm %{_vpath_builddir}/scripts/my.cnf
 %endif
 
 # use different config file name for each variant of server (mariadb / mysql)
@@ -940,21 +936,21 @@ mv %{buildroot}%{_sysconfdir}/my.cnf.d/server.cnf %{buildroot}%{_sysconfdir}/my.
 # remove SysV init script and a symlink to that, we use systemd
 rm %{buildroot}%{_libexecdir}/rcmysql
 # install systemd unit files and scripts for handling server startup
-install -D -p -m 644 scripts/mysql.service %{buildroot}%{_unitdir}/%{daemon_name}.service
-install -D -p -m 644 scripts/mysql@.service %{buildroot}%{_unitdir}/%{daemon_name}@.service
+install -D -p -m 644 %{_vpath_builddir}/scripts/mysql.service %{buildroot}%{_unitdir}/%{daemon_name}.service
+install -D -p -m 644 %{_vpath_builddir}/scripts/mysql@.service %{buildroot}%{_unitdir}/%{daemon_name}@.service
 # Remove the upstream version
 rm %{buildroot}%{_tmpfilesdir}/mariadb.conf
 # Install downstream version
-install -D -p -m 0644 scripts/mysql.tmpfiles.d %{buildroot}%{_tmpfilesdir}/%{name}.conf
+install -D -p -m 0644 %{_vpath_builddir}/scripts/mysql.tmpfiles.d %{buildroot}%{_tmpfilesdir}/%{name}.conf
 %if 0%{?mysqld_pid_dir:1}
 echo "d %{pidfiledir} 0755 mysql mysql -" >>%{buildroot}%{_tmpfilesdir}/%{name}.conf
 %endif
 
 # helper scripts for service starting
-install -p -m 755 scripts/mysql-prepare-db-dir %{buildroot}%{_libexecdir}/mysql-prepare-db-dir
-install -p -m 755 scripts/mysql-check-socket %{buildroot}%{_libexecdir}/mysql-check-socket
-install -p -m 755 scripts/mysql-check-upgrade %{buildroot}%{_libexecdir}/mysql-check-upgrade
-install -p -m 644 scripts/mysql-scripts-common %{buildroot}%{_libexecdir}/mysql-scripts-common
+install -p -m 755 %{_vpath_builddir}/scripts/mysql-prepare-db-dir %{buildroot}%{_libexecdir}/mysql-prepare-db-dir
+install -p -m 755 %{_vpath_builddir}/scripts/mysql-check-socket %{buildroot}%{_libexecdir}/mysql-check-socket
+install -p -m 755 %{_vpath_builddir}/scripts/mysql-check-upgrade %{buildroot}%{_libexecdir}/mysql-check-upgrade
+install -p -m 644 %{_vpath_builddir}/scripts/mysql-scripts-common %{buildroot}%{_libexecdir}/mysql-scripts-common
 
 # install aditional galera selinux policy
 %if %{with galera}
@@ -1008,13 +1004,13 @@ install -p -m 0644 %{SOURCE71} %{basename:%{SOURCE71}}
 
 # install galera config file
 %if %{with galera}
-sed -i -r 's|^wsrep_provider=none|wsrep_provider=%{_libdir}/galera/libgalera_smm.so|' support-files/wsrep.cnf
-install -p -m 0644 support-files/wsrep.cnf %{buildroot}%{_sysconfdir}/my.cnf.d/galera.cnf
+sed -i -r 's|^wsrep_provider=none|wsrep_provider=%{_libdir}/galera/libgalera_smm.so|' %{_vpath_builddir}/support-files/wsrep.cnf
+install -p -m 0644 %{_vpath_builddir}/support-files/wsrep.cnf %{buildroot}%{_sysconfdir}/my.cnf.d/galera.cnf
 %endif
 # install the clustercheck script
 mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
 touch %{buildroot}%{_sysconfdir}/sysconfig/clustercheck
-install -p -m 0755 scripts/clustercheck %{buildroot}%{_bindir}/clustercheck
+install -p -m 0755 %{_vpath_builddir}/scripts/clustercheck %{buildroot}%{_bindir}/clustercheck
 
 # remove duplicate logrotate script
 rm %{buildroot}%{logrotateddir}/mysql
@@ -1172,7 +1168,7 @@ export MTR_BUILD_THREAD=%{__isa_bits}
 
 (
   set -ex
-  cd mysql-test
+  cd %{buildroot}%{_datadir}/mysql-test
 
   export common_testsuite_arguments=" --parallel=auto --force --retry=2 --suite-timeout=900 --testcase-timeout=30 --mysqld=--binlog-format=mixed --force-restart --shutdown-timeout=60 --max-test-fail=5 "
 
@@ -1582,6 +1578,13 @@ fi
 %endif
 
 %changelog
+* Tue Aug 18 2020 Michal Schorm <mschorm@redhat.com> - 10.4.13-7
+- Do CMake out-of-source builds
+- Force the CMake change regarding the in-source builds also to F31 and F32
+- Use CMake macros instead of cmake & make direct commands
+- %%cmake macro covers the %%{set_build_flags}, so they are not needed
+  Other changes to compile flags must be specified *after* the %%cmake macro
+
 * Wed Aug 05 2020 Jeff Law <law@redhat.com> - 3:10.4.13-6
 - Disable LTO
 
