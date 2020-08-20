@@ -151,8 +151,8 @@
 %global sameevr   %{epoch}:%{version}-%{release}
 
 Name:             mariadb
-Version:          10.4.13
-Release:          7%{?with_debug:.debug}%{?dist}
+Version:          10.4.14
+Release:          1%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1578,6 +1578,9 @@ fi
 %endif
 
 %changelog
+* Thu Aug 20 2020 Michal Schorm <mschorm@redhat.com> - 10.4.14-1
+- Rebase to 10.4.14
+
 * Tue Aug 18 2020 Michal Schorm <mschorm@redhat.com> - 10.4.13-7
 - Do CMake out-of-source builds
 - Force the CMake change regarding the in-source builds also to F31 and F32
