@@ -1603,6 +1603,8 @@ fi
 %changelog
 * Mon Sep 21 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.5-1
 - Rebase to 10.5.5
+- Fix mariadb-ownsetup
+- Add manual for aria_s3_copy
 
 * Wed Sep 16 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.4-1
 - Rebase to 10.5.4

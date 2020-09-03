@@ -3,12 +3,12 @@ Use PCDIR CMake option, if configured
 Upstream install the server pkgconfig file into arch-independent directory
 Reported to upstream as: https://jira.mariadb.org/browse/MDEV-14340
 
---- mariadb-10.5.2/support-files/CMakeLists.txt	2020-04-01 01:31:21.426832942 +0200
-+++ mariadb-10.5.2/support-files/CMakeLists.txt_patched	2020-04-01 01:35:05.808309914 +0200
-@@ -92,7 +92,11 @@ IF(UNIX)
+--- mariadb-10.5.5/support-files/CMakeLists.txt.old	2020-09-30 10:36:08.582490318 +0200
++++ mariadb-10.5.5/support-files/CMakeLists.txt	2020-09-30 10:38:58.079710848 +0200
+@@ -91,7 +91,11 @@
+   ENDIF()
  
    CONFIGURE_FILE(mariadb.pc.in ${CMAKE_CURRENT_BINARY_DIR}/mariadb.pc @ONLY)
-   CONFIGURE_FILE(rpm/server.cnf ${CMAKE_CURRENT_BINARY_DIR}/rpm/server.cnf @ONLY)
 +IF(INSTALL_PCDIR)
 +  INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/mariadb.pc DESTINATION ${INSTALL_PCDIR} COMPONENT Development)
 +ELSE()
