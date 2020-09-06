@@ -152,7 +152,7 @@
 
 Name:             mariadb
 Version:          10.4.14
-Release:          2%{?with_debug:.debug}%{?dist}
+Release:          3%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1128,6 +1128,8 @@ rm %{buildroot}%{_bindir}/{mariadb-client-test,mariadb-test}
 rm %{buildroot}%{_mandir}/man1/{mysql_client_test,mysqltest,my_safe_process}.1*
 rm %{buildroot}%{_mandir}/man1/{mariadb-client-test,mariadb-test}.1*
 rm %{buildroot}%{_mandir}/man1/{mysql-test-run,mysql-stress-test}.pl.1*
+rm %{buildroot}/suite/plugins/pam/mariadb_mtr
+rm %{buildroot}/suite/plugins/pam/pam_mariadb_mtr.so
 %endif
 
 %if %{without galera}
@@ -1578,6 +1580,9 @@ fi
 %endif
 
 %changelog
+* Sun Sep 06 2020 Michal Schorm <mschorm@redhat.com> - 10.4.14-3
+- Resolves: #1851605
+
 * Thu Sep 03 2020 Michal Schorm <mschorm@redhat.com> - 10.4.14-2
 - Resolves: #1873999, #1874446
 
