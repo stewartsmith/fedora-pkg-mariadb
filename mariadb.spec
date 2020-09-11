@@ -15,7 +15,7 @@
 # The last version on which the full testsuite has been run
 # In case of further rebuilds of that version, don't require full testsuite to be run
 # run only "main" suite
-%global last_tested_version 10.4.14
+%global last_tested_version 10.5.1
 # Set to 1 to force run the testsuite even if it was already tested in current version
 %global force_run_testsuite 0
 
@@ -104,14 +104,14 @@
 
 
 
-# MariaDB 10.1.39 and later requires pcre >= 8.43, otherwise we need to use
+# MariaDB 10.0 and later requires pcre >= 10.34, otherwise we need to use
 # the bundled library, since the package cannot be build with older version
 #   https://mariadb.com/kb/en/pcre/
 %if 0%{?fedora} || 0%{?rhel} > 7
 %bcond_without unbundled_pcre
 %else
 %bcond_with unbundled_pcre
-%global pcre_bundled_version 8.43
+%global pcre_bundled_version 10.34
 %endif
 
 # Use main python interpretter version
@@ -151,7 +151,7 @@
 %global sameevr   %{epoch}:%{version}-%{release}
 
 Name:             mariadb
-Version:          10.5.0
+Version:          10.5.1
 Release:          1%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
@@ -194,14 +194,14 @@ Patch7:           %{pkgnamepatch}-scripts.patch
 Patch9:           %{pkgnamepatch}-ownsetup.patch
 #   Patch10: Fix cipher name in the SSL Cipher name test
 Patch10:          %{pkgnamepatch}-ssl-cipher-tests.patch
+#   Patch11: Use PCDIR CMake option, if configured
+Patch11:          %{pkgnamepatch}-pcdir.patch
 #   Patch13: Fix Spider code on armv7hl; https://jira.mariadb.org/browse/MDEV-18737
 Patch13:          %{pkgnamepatch}-spider_on_armv7hl.patch
 #   Patch15:  Add option to edit groonga's and groonga-normalizer-mysql install path
 Patch15:          %{pkgnamepatch}-groonga.patch
 #   Patch16: Workaround for "chown 0" with priviledges dropped to "mysql" user
 Patch16:          %{pkgnamepatch}-auth_pam_tool_dir.patch
-#   Patch17: Fix of an upstream bug. Fixed in the next (10.5.1) version.
-Patch17:          %{pkgnamepatch}-10.5.0-libsql_builtins.patch
 
 BuildRequires:    cmake gcc-c++
 BuildRequires:    multilib-rpm-config
@@ -227,9 +227,9 @@ BuildRequires:    bison bison-devel
 
 # auth_pam.so plugin will be build if pam-devel is installed
 BuildRequires:    pam-devel
-# use either new enough version of pcre or provide bundles(pcre)
-%{?with_unbundled_pcre:BuildRequires: pcre-devel >= 8.43 pkgconf}
-%{!?with_unbundled_pcre:Provides: bundled(pcre) = %{pcre_bundled_version}}
+# use either new enough version of pcre2 or provide bundles(pcre2)
+%{?with_unbundled_pcre:BuildRequires: pcre2-devel >= 10.34 pkgconf}
+%{!?with_unbundled_pcre:Provides: bundled(pcre2) = %{pcre_bundled_version}}
 # Few utilities needs Perl
 %if 0%{?fedora} || 0%{?rhel} > 7
 BuildRequires:    perl-interpreter
@@ -711,10 +711,10 @@ rm -r storage/rocksdb/
 %patch7 -p1
 %patch9 -p1
 %patch10 -p1
+%patch11 -p1
 #%patch13 -p1
 %patch15 -p1
 %patch16 -p1
-%patch17 -p1
 
 # workaround for upstream bug #56342
 #rm mysql-test/t/ssl_8k_key-master.opt
@@ -746,22 +746,20 @@ sed 's/mariadb-server-galera/%{name}-server-galera/' %{SOURCE72} > selinux/%{nam
 
 
 # Get version of PCRE, that upstream use
-pcre_maj=`grep '^m4_define(pcre_major' pcre/configure.ac | sed -r 's/^m4_define\(pcre_major, \[([0-9]+)\]\)/\1/'`
-pcre_min=`grep '^m4_define(pcre_minor' pcre/configure.ac | sed -r 's/^m4_define\(pcre_minor, \[([0-9]+)\]\)/\1/'`
+pcre_version=`grep -e "ftp.pcre.org/pub/pcre/pcre2" cmake/pcre.cmake | sed -r "s;[^0123456789]*2-([[:digit:]]+\.[[:digit:]]+)\.[^0123456789]*;\1;"`
 
-%if %{without unbundled_pcre}
 # Check if the PCRE version in macro 'pcre_bundled_version', used in Provides: bundled(...), is the same version as upstream actually bundles
-if [ %{pcre_bundled_version} != "$pcre_maj.$pcre_min" ]
-then
-  echo "\n Error: Bundled PCRE version is not correct. \n\tBundled version number:%{pcre_bundled_version} \n\tUpstream version number: $pcre_maj.$pcre_min\n"
+%if %{without unbundled_pcre}
+if [ %{pcre_bundled_version} != "$pcre_version" ] ; then
+  echo "\n Error: Bundled PCRE version is not correct. \n\tBundled version number:%{pcre_bundled_version} \n\tUpstream version number: $pcre_version\n"
   exit 1
 fi
 %else
 # Check if the PCRE version that upstream use, is the same as the one present in system
-pcre_system_version=`pkgconf %{_libdir}/pkgconfig/libpcre.pc --modversion 2>/dev/null `
-if [ "$pcre_system_version" != "$pcre_maj.$pcre_min" ]
-then
-  echo "\n Warning: Error: Bundled PCRE version is not correct. \n\tSystem version number:$pcre_system_version \n\tUpstream version number: $pcre_maj.$pcre_min\n"
+pcre_system_version=`pkgconf %{_libdir}/pkgconfig/libpcre2-*.pc --modversion 2>/dev/null | head -n 1`
+
+if [ "$pcre_system_version" != "$pcre_version" ] ; then
+  echo "\n Warning: Error: Bundled PCRE version is not correct. \n\tSystem version number:$pcre_system_version \n\tUpstream version number: $pcre_version\n"
 fi
 %endif
 
@@ -941,9 +939,8 @@ rm %{buildroot}%{_libexecdir}/rcmysql
 # install systemd unit files and scripts for handling server startup
 install -D -p -m 644 %{_vpath_builddir}/scripts/mysql.service %{buildroot}%{_unitdir}/%{daemon_name}.service
 install -D -p -m 644 %{_vpath_builddir}/scripts/mysql@.service %{buildroot}%{_unitdir}/%{daemon_name}@.service
-# Remove the upstream version
-rm %{buildroot}%{_tmpfilesdir}/mariadb.conf
-# Install downstream version
+
+# Install downstream version of tmpfiles
 install -D -p -m 0644 %{_vpath_builddir}/scripts/mysql.tmpfiles.d %{buildroot}%{_tmpfilesdir}/%{name}.conf
 %if 0%{?mysqld_pid_dir:1}
 echo "d %{pidfiledir} 0755 mysql mysql -" >>%{buildroot}%{_tmpfilesdir}/%{name}.conf
@@ -1020,7 +1017,12 @@ rm %{buildroot}%{logrotateddir}/mysql
 # Remove AppArmor files
 rm -r %{buildroot}%{_datadir}/%{pkg_name}/policy/apparmor
 
-mv %{buildroot}/%{_lib}/security %{buildroot}%{_libdir}
+# Buildroot does not have symlink /lib64 --> /usr/lib64
+%if %{__isa_bits} == 64 && 0%{?fedora}
+mv %{buildroot}/lib64/security %{buildroot}%{_libdir}
+%else
+mv %{buildroot}/lib/security %{buildroot}%{_libdir}
+%endif
 
 # Disable plugins
 %if %{with gssapi}
@@ -1344,6 +1346,8 @@ fi
 %{_bindir}/myisampack
 %{_bindir}/my_print_defaults
 
+%{_bindir}/mariadb-conv
+
 %{_bindir}/mysql_{install_db,secure_installation,tzinfo_to_sql}
 %{_bindir}/mariadb-{install-db,secure-installation,tzinfo-to-sql}
 %{_bindir}/{mysqld_,mariadbd-}safe
@@ -1583,7 +1587,10 @@ fi
 %endif
 
 %changelog
-* Tue Sep 08 2020 Michal Schorm <mschorm@redhat.com> - 10.5.0-1
+* Thu Apr 09 2020 Michal Schorm <mschorm@redhat.com> - 10.5.1-1
+- Test rebase to 10.5.1 - Beta
+
+* Thu Apr 09 2020 Michal Schorm <mschorm@redhat.com> - 10.5.0-1
 - Test rebase to 10.5.0 - Alpha
 
 * Sun Sep 06 2020 Michal Schorm <mschorm@redhat.com> - 10.4.14-3
