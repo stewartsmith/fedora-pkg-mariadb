@@ -42,3 +42,6 @@ encryption.innodb-redo-badkey                :
 main.mysqld--help2                           :
 disks.disks                                  :
 disks.disks_notembedded                      :
+
+# Fails since 10.5.3
+main.mysqld--help-aria                       :

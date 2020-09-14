@@ -153,7 +153,7 @@
 %global sameevr   %{epoch}:%{version}-%{release}
 
 Name:             mariadb
-Version:          10.5.2
+Version:          10.5.3
 Release:          1%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
@@ -994,7 +994,7 @@ rm %{buildroot}%{_bindir}/mytop
 rm %{buildroot}%{_mandir}/man1/mytop.1*
 
 # Should be shipped with mariadb-connector-c
-rm %{buildroot}%{_mandir}/man1/mariadb-config.1*
+rm %{buildroot}%{_mandir}/man1/mariadb_config.1*
 
 # put logrotate script where it needs to be
 mkdir -p %{buildroot}%{logrotateddir}
@@ -1007,6 +1007,12 @@ install -p -m 0644 %{SOURCE6} %{basename:%{SOURCE6}}
 install -p -m 0644 %{SOURCE7} %{basename:%{SOURCE7}}
 install -p -m 0644 %{SOURCE16} %{basename:%{SOURCE16}}
 install -p -m 0644 %{SOURCE71} %{basename:%{SOURCE71}}
+
+# Delete upstreams service files
+# We don't use this location of service files
+rm %{buildroot}%{_datadir}/%{pkg_name}/systemd/{mysql,mysqld}.service
+# These may come handy in a future, but right now we use our own services
+rm %{buildroot}/usr/lib/systemd/system/{mysql,mysqld}.service
 
 # install galera config file
 %if %{with galera}
@@ -1069,7 +1075,6 @@ rm %{buildroot}%{_libdir}/%{pkg_name}/plugin/auth_gssapi_client.so
 rm %{buildroot}%{_bindir}/mysql_config*
 rm %{buildroot}%{_bindir}/mariadb_config
 rm %{buildroot}%{_mandir}/man1/mysql_config*.1*
-unlink %{buildroot}%{_mandir}/man1/mariadb_config.1*
 %endif
 
 %if %{without clibrary} && %{with devel}
@@ -1589,7 +1594,6 @@ fi
 %{_bindir}/{mysql_client_test,mysqltest,mariadb-client-test,mariadb-test}
 %{_bindir}/my_safe_process
 %attr(-,mysql,mysql) %{_datadir}/mysql-test
-%{_mandir}/man1/mysql_client_test.1*
 %{_mandir}/man1/{mysql_client_test,mysqltest,mariadb-client-test,mariadb-test}.1*
 %{_mandir}/man1/my_safe_process.1*
 %{_mandir}/man1/mysql-stress-test.pl.1*
@@ -1597,6 +1601,9 @@ fi
 %endif
 
 %changelog
+* Mon Sep 14 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.3-1
+- Rebase to 10.5.3
+
 * Fri Sep 11 2020 Michal Schorm <mschorm@redhat.com> - 10.5.2-1
 - Test rebase to 10.5.2 - Beta
 - TokuDB SE has been deprecated
