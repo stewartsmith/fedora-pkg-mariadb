@@ -45,3 +45,6 @@ disks.disks_notembedded                      :
 
 # Fails since 10.5.3
 main.mysqld--help-aria                       :
+
+# Fails since 10.5.4
+main.ssl_system_ca                           :

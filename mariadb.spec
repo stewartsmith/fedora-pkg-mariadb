@@ -153,7 +153,7 @@
 %global sameevr   %{epoch}:%{version}-%{release}
 
 Name:             mariadb
-Version:          10.5.3
+Version:          10.5.4
 Release:          1%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
@@ -1374,6 +1374,7 @@ fi
 
 %config(noreplace) %{_sysconfdir}/my.cnf.d/%{pkg_name}-server.cnf
 %config(noreplace) %{_sysconfdir}/my.cnf.d/enable_encryption.preset
+%config(noreplace) %{_sysconfdir}/my.cnf.d/spider.cnf
 
 %{_libexecdir}/{mysqld,mariadbd}
 
@@ -1429,7 +1430,6 @@ fi
 %{_mandir}/man1/mysql.server.1*
 
 %{_datadir}/%{pkg_name}/fill_help_tables.sql
-%{_datadir}/%{pkg_name}/install_spider.sql
 %{_datadir}/%{pkg_name}/maria_add_gis_sp.sql
 %{_datadir}/%{pkg_name}/maria_add_gis_sp_bootstrap.sql
 %{_datadir}/%{pkg_name}/mysql_system_tables.sql
@@ -1601,6 +1601,10 @@ fi
 %endif
 
 %changelog
+* Wed Sep 16 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.4-1
+- Rebase to 10.5.4
+- Add spider.cnf to the server config files
+
 * Mon Sep 14 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.3-1
 - Rebase to 10.5.3
 
