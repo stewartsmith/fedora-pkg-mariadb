@@ -153,7 +153,7 @@
 %global sameevr   %{epoch}:%{version}-%{release}
 
 Name:             mariadb
-Version:          10.5.4
+Version:          10.5.5
 Release:          1%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
@@ -1403,7 +1403,7 @@ fi
 %exclude %{_libdir}/%{pkg_name}/plugin/mysql_clear_password.so
 %endif
 
-%{_mandir}/man1/aria_{chk,dump_log,ftdump,pack,read_log}.1*
+%{_mandir}/man1/aria_{chk,dump_log,ftdump,pack,read_log,s3_copy}.1*
 %{_mandir}/man1/galera_new_cluster.1*
 %{_mandir}/man1/galera_recovery.1*
 %{_mandir}/man1/mariadb-service-convert.1*
@@ -1601,6 +1601,9 @@ fi
 %endif
 
 %changelog
+* Mon Sep 21 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.5-1
+- Rebase to 10.5.5
+
 * Wed Sep 16 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.4-1
 - Rebase to 10.5.4
 - Add spider.cnf to the server config files
