@@ -1030,11 +1030,7 @@ rm %{buildroot}%{logrotateddir}/mysql
 rm -r %{buildroot}%{_datadir}/%{pkg_name}/policy/apparmor
 
 # Buildroot does not have symlink /lib64 --> /usr/lib64
-%if %{__isa_bits} == 64 && 0%{?fedora}
-mv %{buildroot}/lib64/security %{buildroot}%{_libdir}
-%else
-mv %{buildroot}/lib/security %{buildroot}%{_libdir}
-%endif
+mv %{buildroot}/%{_lib}/security %{buildroot}%{_libdir}
 
 # Disable plugins
 %if %{with gssapi}
