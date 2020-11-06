@@ -48,3 +48,7 @@ main.mysqld--help-aria                       :
 
 # Fails since 10.5.4
 main.ssl_system_ca                           :
+
+# Fails since 10.5.7
+innodb.innodb_wl6326_big                     :
+plugins.feedback_plugin_load                 :

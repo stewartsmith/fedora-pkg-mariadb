@@ -153,7 +153,7 @@
 %global sameevr   %{epoch}:%{version}-%{release}
 
 Name:             mariadb
-Version:          10.5.5
+Version:          10.5.7
 Release:          1%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
@@ -1070,6 +1070,7 @@ rm %{buildroot}%{_libdir}/%{pkg_name}/plugin/auth_gssapi_client.so
 %if %{without clibrary} || %{without devel}
 rm %{buildroot}%{_bindir}/mysql_config*
 rm %{buildroot}%{_bindir}/mariadb_config
+rm %{buildroot}%{_bindir}/mariadb-config
 rm %{buildroot}%{_mandir}/man1/mysql_config*.1*
 %endif
 
@@ -1561,11 +1562,11 @@ fi
 %{_libdir}/{libmysqlclient.so.18,libmariadb.so,libmysqlclient.so,libmysqlclient_r.so}
 %{_bindir}/mysql_config*
 %{_bindir}/mariadb_config*
+%{_bindir}/mariadb-config
 %{_libdir}/libmariadb.so
 %{_libdir}/libmysqlclient.so
 %{_libdir}/libmysqlclient_r.so
 %{_mandir}/man1/mysql_config*
-%{_mandir}/man1/mariadb_config*
 %endif
 %endif
 
@@ -1597,6 +1598,9 @@ fi
 %endif
 
 %changelog
+* Fri Nov 06 2020 Michal Schorm <mschorm@redhat.com> - 10.5.7-1
+- Rebase to 10.5.7
+
 * Mon Sep 21 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.5-1
 - Rebase to 10.5.5
 - Fix mariadb-ownsetup
