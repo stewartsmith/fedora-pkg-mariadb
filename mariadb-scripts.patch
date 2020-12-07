@@ -1,11 +1,12 @@
 We have some downstream patches and other scripts that include variables to
 be expanded by cmake. Cmake needs to know about them, so adding them manually.
 
---- mariadb-10.3.8/scripts/CMakeLists.txt	2018-07-02 09:34:11.000000000 +0200
-+++ mariadb-10.3.8/scripts/CMakeLists.txt_patched	2018-07-03 10:58:15.954670153 +0200
-@@ -361,6 +361,34 @@ ELSE()
-       COMPONENT ${${file}_COMPONENT}
-      )
+ # Install libgcc as  mylibgcc.a
+--- mariadb-10.5.5/scripts/CMakeLists.txt.old	2020-09-24 10:13:35.272589689 +0200
++++ mariadb-10.5.5/scripts/CMakeLists.txt	2020-09-24 10:17:31.428985798 +0200
+@@ -377,6 +377,34 @@
+       INSTALL_LINK(${file} ${binname} ${INSTALL_BINDIR} ${${file}_COMPONENT})
+     ENDIF()
    ENDFOREACH()
 +
 +  # files for systemd

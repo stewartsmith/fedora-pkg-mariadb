@@ -15,7 +15,7 @@
 # The last version on which the full testsuite has been run
 # In case of further rebuilds of that version, don't require full testsuite to be run
 # run only "main" suite
-%global last_tested_version 10.4.17
+%global last_tested_version 10.5.8
 # Set to 1 to force run the testsuite even if it was already tested in current version
 %global force_run_testsuite 0
 
@@ -32,9 +32,10 @@
 
 
 
-# TokuDB engine
+# TokuDB engine - DEPRECATED !
 #   https://mariadb.com/kb/en/mariadb/tokudb/
 #   TokuDB engine is available only for x86_64
+#   The Percona upstream deprecated the SE. It is not part of MariaDB 10.5
 # Mroonga engine
 #   https://mariadb.com/kb/en/mariadb/about-mroonga/
 #   Current version in MariaDB, 7.07, only supports the x86_64
@@ -45,7 +46,8 @@
 #   RocksDB may be built with jemalloc, if specified in CMake
 %ifarch x86_64
 %if 0%{?fedora}
-%bcond_without tokudb
+# TokuDB is deprecated in MariaDB 10.5 and later
+%bcond_with tokudb
 %bcond_without mroonga
 %bcond_without rocksdb
 %else
@@ -104,14 +106,14 @@
 
 
 
-# MariaDB 10.1.39 and later requires pcre >= 8.43, otherwise we need to use
+# MariaDB 10.0 and later requires pcre >= 10.34, otherwise we need to use
 # the bundled library, since the package cannot be build with older version
 #   https://mariadb.com/kb/en/pcre/
 %if 0%{?fedora} || 0%{?rhel} > 7
 %bcond_without unbundled_pcre
 %else
 %bcond_with unbundled_pcre
-%global pcre_bundled_version 8.44
+%global pcre_bundled_version 10.34
 %endif
 
 # Use main python interpretter version
@@ -151,7 +153,7 @@
 %global sameevr   %{epoch}:%{version}-%{release}
 
 Name:             mariadb
-Version:          10.4.17
+Version:          10.5.8
 Release:          1%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
@@ -209,6 +211,8 @@ Patch7:           %{pkgnamepatch}-scripts.patch
 Patch9:           %{pkgnamepatch}-ownsetup.patch
 #   Patch10: Fix cipher name in the SSL Cipher name test
 Patch10:          %{pkgnamepatch}-ssl-cipher-tests.patch
+#   Patch11: Use PCDIR CMake option, if configured
+Patch11:          %{pkgnamepatch}-pcdir.patch
 #   Patch13: Fix Spider code on armv7hl; https://jira.mariadb.org/browse/MDEV-18737
 Patch13:          %{pkgnamepatch}-spider_on_armv7hl.patch
 #   Patch15:  Add option to edit groonga's and groonga-normalizer-mysql install path
@@ -240,9 +244,9 @@ BuildRequires:    bison bison-devel
 
 # auth_pam.so plugin will be build if pam-devel is installed
 BuildRequires:    pam-devel
-# use either new enough version of pcre or provide bundles(pcre)
-%{?with_unbundled_pcre:BuildRequires: pcre-devel >= 8.43 pkgconf}
-%{!?with_unbundled_pcre:Provides: bundled(pcre) = %{pcre_bundled_version}}
+# use either new enough version of pcre2 or provide bundles(pcre2)
+%{?with_unbundled_pcre:BuildRequires: pcre2-devel >= 10.34 pkgconf}
+%{!?with_unbundled_pcre:Provides: bundled(pcre2) = %{pcre_bundled_version}}
 # Few utilities needs Perl
 %if 0%{?fedora} || 0%{?rhel} > 7
 BuildRequires:    perl-interpreter
@@ -724,7 +728,8 @@ rm -r storage/rocksdb/
 %patch7 -p1
 %patch9 -p1
 %patch10 -p1
-%patch13 -p1
+%patch11 -p1
+#%patch13 -p1
 %patch15 -p1
 %patch16 -p1
 
@@ -755,22 +760,20 @@ sed 's/mariadb-server-galera/%{name}-server-galera/' %{SOURCE72} > selinux/%{nam
 
 
 # Get version of PCRE, that upstream use
-pcre_maj=`grep '^m4_define(pcre_major' pcre/configure.ac | sed -r 's/^m4_define\(pcre_major, \[([0-9]+)\]\)/\1/'`
-pcre_min=`grep '^m4_define(pcre_minor' pcre/configure.ac | sed -r 's/^m4_define\(pcre_minor, \[([0-9]+)\]\)/\1/'`
+pcre_version=`grep -e "ftp.pcre.org/pub/pcre/pcre2" cmake/pcre.cmake | sed -r "s;[^0123456789]*2-([[:digit:]]+\.[[:digit:]]+)\.[^0123456789]*;\1;"`
 
-%if %{without unbundled_pcre}
 # Check if the PCRE version in macro 'pcre_bundled_version', used in Provides: bundled(...), is the same version as upstream actually bundles
-if [ %{pcre_bundled_version} != "$pcre_maj.$pcre_min" ]
-then
-  echo "\n Error: Bundled PCRE version is not correct. \n\tBundled version number:%{pcre_bundled_version} \n\tUpstream version number: $pcre_maj.$pcre_min\n"
+%if %{without unbundled_pcre}
+if [ %{pcre_bundled_version} != "$pcre_version" ] ; then
+  echo "\n Error: Bundled PCRE version is not correct. \n\tBundled version number:%{pcre_bundled_version} \n\tUpstream version number: $pcre_version\n"
   exit 1
 fi
 %else
 # Check if the PCRE version that upstream use, is the same as the one present in system
-pcre_system_version=`pkgconf %{_libdir}/pkgconfig/libpcre.pc --modversion 2>/dev/null `
-if [ "$pcre_system_version" != "$pcre_maj.$pcre_min" ]
-then
-  echo "\n Warning: Error: Bundled PCRE version is not correct. \n\tSystem version number:$pcre_system_version \n\tUpstream version number: $pcre_maj.$pcre_min\n"
+pcre_system_version=`pkgconf %{_libdir}/pkgconfig/libpcre2-*.pc --modversion 2>/dev/null | head -n 1`
+
+if [ "$pcre_system_version" != "$pcre_version" ] ; then
+  echo "\n Warning: Error: Bundled PCRE version is not correct. \n\tSystem version number:$pcre_system_version \n\tUpstream version number: $pcre_version\n"
 fi
 %endif
 
@@ -950,9 +953,8 @@ rm %{buildroot}%{_libexecdir}/rcmysql
 # install systemd unit files and scripts for handling server startup
 install -D -p -m 644 %{_vpath_builddir}/scripts/mysql.service %{buildroot}%{_unitdir}/%{daemon_name}.service
 install -D -p -m 644 %{_vpath_builddir}/scripts/mysql@.service %{buildroot}%{_unitdir}/%{daemon_name}@.service
-# Remove the upstream version
-rm %{buildroot}%{_tmpfilesdir}/mariadb.conf
-# Install downstream version
+
+# Install downstream version of tmpfiles
 install -D -p -m 0644 %{_vpath_builddir}/scripts/mysql.tmpfiles.d %{buildroot}%{_tmpfilesdir}/%{name}.conf
 %if 0%{?mysqld_pid_dir:1}
 echo "d %{pidfiledir} 0755 mysql mysql -" >>%{buildroot}%{_tmpfilesdir}/%{name}.conf
@@ -1001,6 +1003,10 @@ rm %{buildroot}%{_datadir}/%{pkg_name}/mysqld_multi.server
 # Binary for monitoring MySQL performance
 # Shipped as a standalone package in Fedora
 rm %{buildroot}%{_bindir}/mytop
+rm %{buildroot}%{_mandir}/man1/mytop.1*
+
+# Should be shipped with mariadb-connector-c
+rm %{buildroot}%{_mandir}/man1/mariadb_config.1*
 
 # put logrotate script where it needs to be
 mkdir -p %{buildroot}%{logrotateddir}
@@ -1013,6 +1019,12 @@ install -p -m 0644 %{SOURCE6} %{basename:%{SOURCE6}}
 install -p -m 0644 %{SOURCE7} %{basename:%{SOURCE7}}
 install -p -m 0644 %{SOURCE16} %{basename:%{SOURCE16}}
 install -p -m 0644 %{SOURCE71} %{basename:%{SOURCE71}}
+
+# Delete upstreams service files
+# We don't use this location of service files
+rm %{buildroot}%{_datadir}/%{pkg_name}/systemd/{mysql,mysqld}.service
+# These may come handy in a future, but right now we use our own services
+rm %{buildroot}/usr/lib/systemd/system/{mysql,mysqld}.service
 
 # install galera config file
 %if %{with galera}
@@ -1029,6 +1041,7 @@ rm %{buildroot}%{logrotateddir}/mysql
 # Remove AppArmor files
 rm -r %{buildroot}%{_datadir}/%{pkg_name}/policy/apparmor
 
+# Buildroot does not have symlink /lib64 --> /usr/lib64
 mv %{buildroot}/%{_lib}/security %{buildroot}%{_libdir}
 
 # Disable plugins
@@ -1069,8 +1082,8 @@ rm %{buildroot}%{_libdir}/%{pkg_name}/plugin/auth_gssapi_client.so
 %if %{without clibrary} || %{without devel}
 rm %{buildroot}%{_bindir}/mysql_config*
 rm %{buildroot}%{_bindir}/mariadb_config
+rm %{buildroot}%{_bindir}/mariadb-config
 rm %{buildroot}%{_mandir}/man1/mysql_config*.1*
-unlink %{buildroot}%{_mandir}/man1/mariadb_config.1*
 %endif
 
 %if %{without clibrary} && %{with devel}
@@ -1152,6 +1165,7 @@ rm %{buildroot}%{_datadir}/%{pkg_name}/systemd/use_galera_new_cluster.conf
 
 %if %{without rocksdb}
 rm %{buildroot}%{_mandir}/man1/{mysql_,mariadb-}ldb.1*
+rm %{buildroot}%{_mandir}/man1/myrocks_hotbackup.1*
 %endif
 
 %if %{without backup}
@@ -1356,6 +1370,8 @@ fi
 %{_bindir}/myisampack
 %{_bindir}/my_print_defaults
 
+%{_bindir}/mariadb-conv
+
 %{_bindir}/mysql_{install_db,secure_installation,tzinfo_to_sql}
 %{_bindir}/mariadb-{install-db,secure-installation,tzinfo-to-sql}
 %{_bindir}/{mysqld_,mariadbd-}safe
@@ -1372,6 +1388,7 @@ fi
 
 %config(noreplace) %{_sysconfdir}/my.cnf.d/%{pkg_name}-server.cnf
 %config(noreplace) %{_sysconfdir}/my.cnf.d/enable_encryption.preset
+%config(noreplace) %{_sysconfdir}/my.cnf.d/spider.cnf
 
 %{_libexecdir}/{mysqld,mariadbd}
 
@@ -1400,7 +1417,7 @@ fi
 %exclude %{_libdir}/%{pkg_name}/plugin/mysql_clear_password.so
 %endif
 
-%{_mandir}/man1/aria_{chk,dump_log,ftdump,pack,read_log}.1*
+%{_mandir}/man1/aria_{chk,dump_log,ftdump,pack,read_log,s3_copy}.1*
 %{_mandir}/man1/galera_new_cluster.1*
 %{_mandir}/man1/galera_recovery.1*
 %{_mandir}/man1/mariadb-service-convert.1*
@@ -1409,6 +1426,8 @@ fi
 %{_mandir}/man1/myisampack.1*
 %{_mandir}/man1/myisam_ftdump.1*
 %{_mandir}/man1/my_print_defaults.1*
+
+%{_mandir}/man1/mariadb-conv.1*
 
 %{_mandir}/man1/mysql_{install_db,secure_installation,tzinfo_to_sql}.1*
 %{_mandir}/man1/mariadb-{install-db,secure-installation,tzinfo-to-sql}.1*
@@ -1425,7 +1444,6 @@ fi
 %{_mandir}/man1/mysql.server.1*
 
 %{_datadir}/%{pkg_name}/fill_help_tables.sql
-%{_datadir}/%{pkg_name}/install_spider.sql
 %{_datadir}/%{pkg_name}/maria_add_gis_sp.sql
 %{_datadir}/%{pkg_name}/maria_add_gis_sp_bootstrap.sql
 %{_datadir}/%{pkg_name}/mysql_system_tables.sql
@@ -1500,6 +1518,7 @@ fi
 %{_bindir}/sst_dump
 %{_libdir}/%{pkg_name}/plugin/ha_rocksdb.so
 %{_mandir}/man1/{mysql_,mariadb-}ldb.1*
+%{_mandir}/man1/myrocks_hotbackup.1*
 %endif
 
 %if %{with tokudb}
@@ -1560,11 +1579,11 @@ fi
 %{_libdir}/{libmysqlclient.so.18,libmariadb.so,libmysqlclient.so,libmysqlclient_r.so}
 %{_bindir}/mysql_config*
 %{_bindir}/mariadb_config*
+%{_bindir}/mariadb-config
 %{_libdir}/libmariadb.so
 %{_libdir}/libmysqlclient.so
 %{_libdir}/libmysqlclient_r.so
 %{_mandir}/man1/mysql_config*
-%{_mandir}/man1/mariadb_config*
 %endif
 %endif
 
@@ -1589,7 +1608,6 @@ fi
 %{_bindir}/{mysql_client_test,mysqltest,mariadb-client-test,mariadb-test}
 %{_bindir}/my_safe_process
 %attr(-,mysql,mysql) %{_datadir}/mysql-test
-%{_mandir}/man1/mysql_client_test.1*
 %{_mandir}/man1/{mysql_client_test,mysqltest,mariadb-client-test,mariadb-test}.1*
 %{_mandir}/man1/my_safe_process.1*
 %{_mandir}/man1/mysql-stress-test.pl.1*
@@ -1597,11 +1615,33 @@ fi
 %endif
 
 %changelog
-* Wed Nov 11 2020 Michal Schorm <mschorm@redhat.com> - 10.4.17-1
-- Rebase to 10.4.17
+* Wen Nov 11 2020 Michal Schorm <mschorm@redhat.com> - 10.5.8-1
+- Rebase to 10.5.8
 
-* Wed Nov 04 2020 Michal Schorm <mschorm@redhat.com> - 10.4.16-1
-- Rebase to 10.4.16
+* Fri Nov 06 2020 Michal Schorm <mschorm@redhat.com> - 10.5.7-1
+- Rebase to 10.5.7
+
+* Mon Sep 21 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.5-1
+- Rebase to 10.5.5
+- Fix mariadb-ownsetup
+- Add manual for aria_s3_copy
+
+* Wed Sep 16 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.4-1
+- Rebase to 10.5.4
+- Add spider.cnf to the server config files
+
+* Mon Sep 14 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.3-1
+- Rebase to 10.5.3
+
+* Fri Sep 11 2020 Michal Schorm <mschorm@redhat.com> - 10.5.2-1
+- Test rebase to 10.5.2 - Beta
+- TokuDB SE has been deprecated
+
+* Thu Sep 10 2020 Michal Schorm <mschorm@redhat.com> - 10.5.1-1
+- Test rebase to 10.5.1 - Beta
+
+* Thu Sep 10 2020 Michal Schorm <mschorm@redhat.com> - 10.5.0-1
+- Test rebase to 10.5.0 - Alpha
 
 * Sun Sep 06 2020 Michal Schorm <mschorm@redhat.com> - 10.4.14-3
 - Resolves: #1851605

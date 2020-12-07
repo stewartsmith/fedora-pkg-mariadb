@@ -38,9 +38,17 @@ sys_vars.tcp_nodelay                         :
 # Fails on i686
 encryption.innodb-redo-badkey                :
 
-# Fails on all architectures since 10.4.14
-main.ssl_system_ca                           :
+# Fails since 10.5.2
+main.mysqld--help2                           :
 disks.disks                                  :
+disks.disks_notembedded                      :
 
-# Since 10.3.26 produces a warning to the test logfile which causes the test to fail
+# Fails since 10.5.3
+main.mysqld--help-aria                       :
+
+# Fails since 10.5.4
+main.ssl_system_ca                           :
+
+# Fails since 10.5.7
+innodb.innodb_wl6326_big                     :
 plugins.feedback_plugin_load                 :
