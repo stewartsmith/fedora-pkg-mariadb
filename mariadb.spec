@@ -220,6 +220,7 @@ Patch15:          %{pkgnamepatch}-groonga.patch
 #   Patch16: Workaround for "chown 0" with priviledges dropped to "mysql" user
 Patch16:          %{pkgnamepatch}-auth_pam_tool_dir.patch
 
+BuildRequires: make
 BuildRequires:    cmake gcc-c++
 BuildRequires:    multilib-rpm-config
 BuildRequires:    selinux-policy-devel
