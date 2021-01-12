@@ -154,7 +154,7 @@
 
 Name:             mariadb
 Version:          10.5.8
-Release:          1%{?with_debug:.debug}%{?dist}
+Release:          2%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -557,6 +557,9 @@ Requires:         jemalloc
 The TokuDB storage engine from Percona.
 %endif
 
+%if %{without tokudb}
+Obsoletes:      %{name}-tokudb-engine <= %{sameevr}
+%endif
 
 %if %{with cracklib}
 %package          cracklib-password-check
@@ -1616,7 +1619,11 @@ fi
 %endif
 
 %changelog
-* Wen Nov 11 2020 Michal Schorm <mschorm@redhat.com> - 10.5.8-1
+* Fri Dec 11 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.8-2
+- Add tokudb-engine to obsoletes
+- Resolves: #1906559
+
+* Wed Nov 11 2020 Michal Schorm <mschorm@redhat.com> - 10.5.8-1
 - Rebase to 10.5.8
 
 * Fri Nov 06 2020 Michal Schorm <mschorm@redhat.com> - 10.5.7-1
