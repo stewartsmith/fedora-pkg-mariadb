@@ -154,7 +154,7 @@
 
 Name:             mariadb
 Version:          10.5.8
-Release:          2%{?with_debug:.debug}%{?dist}
+Release:          3%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1619,6 +1619,9 @@ fi
 %endif
 
 %changelog
+* Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3:10.5.8-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Fri Dec 11 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.8-2
 - Add tokudb-engine to obsoletes
 - Resolves: #1906559
