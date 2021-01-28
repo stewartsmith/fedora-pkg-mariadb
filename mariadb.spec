@@ -1232,6 +1232,9 @@ export MTR_BUILD_THREAD=%{__isa_bits}
     %endif
   # blank line
   fi
+
+  # There might be a dangling symlink left from the testing, remove it to not be installed
+  rm -rf ./var
 )
 
 # NOTE: the Spider SE has 2 more hidden testsuites "oracle" and "oracle2".
