@@ -154,7 +154,7 @@
 
 Name:             mariadb
 Version:          10.5.8
-Release:          4%{?with_debug:.debug}%{?dist}
+Release:          5%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1033,7 +1033,11 @@ install -p -m 0644 %{SOURCE71} %{basename:%{SOURCE71}}
 # We don't use this location of service files
 rm %{buildroot}%{_datadir}/%{pkg_name}/systemd/{mysql,mysqld}.service
 # These may come handy in a future, but right now we use our own services
-rm %{buildroot}/usr/lib/systemd/system/{mysql,mysqld}.service
+rm %{buildroot}%{_unitdir}/{mysql,mysqld}.service
+
+# For compatibility with upstream RPMs, create symlinks to "mysql*" named systemd services
+ln -s %{_unitdir}/mariadb.service %{buildroot}%{_unitdir}/mysql.service
+ln -s %{_unitdir}/mariadb.service %{buildroot}%{_unitdir}/mysqld.service
 
 # install galera config file
 %if %{with galera}
@@ -1492,6 +1496,8 @@ fi
 %endif
 
 %{_unitdir}/%{daemon_name}*
+%{_unitdir}/mysql.service
+%{_unitdir}/mysqld.service
 %{?with_tokudb:%exclude %{_unitdir}/mariadb.service.d/tokudb.conf}
 
 %{_libexecdir}/mysql-prepare-db-dir
@@ -1629,6 +1635,9 @@ fi
 %endif
 
 %changelog
+* Sun Jan 31 2021 Michal Schorm <hhorak@redhat.com> - 3:10.5.8-5
+- For compatibility with upstream RPMs, create symlinks to "mysql*" named systemd services
+
 * Thu Jan 28 2021 Honza Horak <hhorak@redhat.com> - 3:10.5.8-4
 - For compatibility with upstream RPMs, create mysqld symlink in sbin
 
