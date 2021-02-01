@@ -165,7 +165,6 @@ License:          GPLv2 with exceptions and LGPLv2 and BSD
 Source0:          https://downloads.mariadb.org/interstitial/mariadb-%{version}/source/mariadb-%{version}.tar.gz
 Source2:          mysql_config_multilib.sh
 Source3:          my.cnf.in
-Source5:          README.mysql-cnf
 Source6:          README.mysql-docs
 Source7:          README.mysql-license
 Source10:         mysql.tmpfiles.d.in
@@ -1023,7 +1022,6 @@ ln -s %{_libexecdir}/mysqld %{buildroot}%{_sbindir}/mysqld
 ln -s %{_libexecdir}/mariadbd %{buildroot}%{_sbindir}/mariadbd
 
 # copy additional docs into build tree so %%doc will find them
-install -p -m 0644 %{SOURCE5} %{basename:%{SOURCE5}}
 install -p -m 0644 %{SOURCE6} %{basename:%{SOURCE6}}
 install -p -m 0644 %{SOURCE7} %{basename:%{SOURCE7}}
 install -p -m 0644 %{SOURCE16} %{basename:%{SOURCE16}}
@@ -1378,7 +1376,6 @@ fi
 %endif
 
 %files server
-%doc README.mysql-cnf
 
 %{_bindir}/aria_{chk,dump_log,ftdump,pack,read_log}
 %{_bindir}/mariadb-service-convert
