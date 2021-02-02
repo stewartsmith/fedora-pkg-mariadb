@@ -1190,9 +1190,10 @@ rm %{buildroot}%{_mandir}/man1/mbstream.1*
 # hack to let 32- and 64-bit tests run concurrently on same build machine
 export MTR_PARALLEL=1
 # Builds might happen at the same host, avoid collision
-#   The port used is calculated as 10 * MTR_BUILD_THREAD + 10000
+#   The port used is calculated as 20 * MTR_BUILD_THREAD + 10000
 #   The resulting port must be between 5000 and 32767
-export MTR_BUILD_THREAD=$(( $(date +%s) % 2200 ))
+#   This is the same as using option "--build-thread" for the "mysql-test-run.pl"
+export MTR_BUILD_THREAD=$(( $(date +%s) % 1100 ))
 
 # The cmake build scripts don't provide any simple way to control the
 # options for mysql-test-run, so ignore the make target and just call it
