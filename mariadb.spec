@@ -62,14 +62,18 @@
 %bcond_without oqgraph
 
 # Other plugins
+# S3 storage engine
+#   https://mariadb.com/kb/en/s3-storage-engine/
 %if 0%{?fedora}
 %bcond_without cracklib
 %bcond_without connect
 %bcond_without sphinx
+%bcond_without s3
 %else
 %bcond_with cracklib
 %bcond_with connect
 %bcond_with sphinx
+%bcond_with s3
 %endif
 
 %bcond_without gssapi
@@ -154,7 +158,7 @@
 
 Name:             mariadb
 Version:          10.5.8
-Release:          4%{?with_debug:.debug}%{?dist}
+Release:          5%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -219,7 +223,7 @@ Patch15:          %{pkgnamepatch}-groonga.patch
 #   Patch16: Workaround for "chown 0" with priviledges dropped to "mysql" user
 Patch16:          %{pkgnamepatch}-auth_pam_tool_dir.patch
 
-BuildRequires: make
+BuildRequires:    make
 BuildRequires:    cmake gcc-c++
 BuildRequires:    multilib-rpm-config
 BuildRequires:    selinux-policy-devel
@@ -600,6 +604,20 @@ The Sphinx storage engine for MariaDB.
 %endif
 
 
+%if %{with s3}
+%package          s3-engine
+Summary:          The S3 storage engine for MariaDB
+Requires:         %{name}-server%{?_isa} = %{sameevr}
+
+BuildRequires:    curl-devel
+
+%description      s3-engine
+The S3 read only storage engine allows archiving MariaDB tables in Amazon S3,
+or any third-party public or private cloud that implements S3 API,
+but still have them accessible for reading in MariaDB.
+%endif
+
+
 %package          server-utils
 Summary:          Non-essential server utilities for MariaDB/MySQL applications
 Requires:         %{name}-server%{?_isa} = %{sameevr}
@@ -854,6 +872,7 @@ fi
          -DPLUGIN_SPHINX=%{?with_sphinx:DYNAMIC}%{!?with_sphinx:NO} \
          -DPLUGIN_TOKUDB=%{?with_tokudb:DYNAMIC}%{!?with_tokudb:NO} \
          -DPLUGIN_CONNECT=%{?with_connect:DYNAMIC}%{!?with_connect:NO} \
+         -DPLUGIN_S3=%{?with_s3:DYNAMIC}%{!?with_s3:NO} \
          -DPLUGIN_CLIENT_ED25519=OFF \
          -DPYTHON_SHEBANG=%{python_path} \
          -DPLUGIN_CACHING_SHA2_PASSWORD=%{?with_clibrary:DYNAMIC}%{!?with_clibrary:OFF} \
@@ -1180,6 +1199,10 @@ rm %{buildroot}%{_mandir}/man1/maria{,db-}backup.1*
 rm %{buildroot}%{_mandir}/man1/mbstream.1*
 %endif
 
+%if %{without s3}
+rm %{buildroot}%{_mandir}/man1/aria_s3_copy.1*
+%endif
+
 %check
 %if %{with test}
 %if %runselftest
@@ -1426,12 +1449,13 @@ fi
 %{?with_tokudb:%exclude %{_libdir}/%{pkg_name}/plugin/ha_tokudb.so}
 %{?with_gssapi:%exclude %{_libdir}/%{pkg_name}/plugin/auth_gssapi.so}
 %{?with_sphinx:%exclude %{_libdir}/%{pkg_name}/plugin/ha_sphinx.so}
+%{?with_s3:%exclude %{_libdir}/%{pkg_name}/plugin/ha_s3.so}
 %if %{with clibrary}
 %exclude %{_libdir}/%{pkg_name}/plugin/dialog.so
 %exclude %{_libdir}/%{pkg_name}/plugin/mysql_clear_password.so
 %endif
 
-%{_mandir}/man1/aria_{chk,dump_log,ftdump,pack,read_log,s3_copy}.1*
+%{_mandir}/man1/aria_{chk,dump_log,ftdump,pack,read_log}.1*
 %{_mandir}/man1/galera_new_cluster.1*
 %{_mandir}/man1/galera_recovery.1*
 %{_mandir}/man1/mariadb-service-convert.1*
@@ -1569,6 +1593,14 @@ fi
 %{_libdir}/%{pkg_name}/plugin/ha_connect.so
 %endif
 
+%if %{with s3}
+%files s3-engine
+%{_bindir}/aria_s3_copy
+%{_mandir}/man1/aria_s3_copy.1*
+%config(noreplace) %{_sysconfdir}/my.cnf.d/s3.cnf
+%{_libdir}/%{pkg_name}/plugin/ha_s3.so
+%endif
+
 %files server-utils
 # Perl utilities
 %{_bindir}/mysql{_convert_table_format,dumpslow,_fix_extensions,hotcopy,_setpermission}
@@ -1629,6 +1661,9 @@ fi
 %endif
 
 %changelog
+* Wed Feb 10 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.8-5
+- Add support for S3 storage engine
+
 * Thu Jan 28 2021 Honza Horak <hhorak@redhat.com> - 3:10.5.8-4
 - For compatibility with upstream RPMs, create mysqld symlink in sbin
 
