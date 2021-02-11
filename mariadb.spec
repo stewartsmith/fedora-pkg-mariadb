@@ -705,6 +705,7 @@ Summary:          The test suite distributed with MariaDB
 Requires:         %{name}%{?_isa} = %{sameevr}
 Requires:         %{name}-common%{?_isa} = %{sameevr}
 Requires:         %{name}-server%{?_isa} = %{sameevr}
+Requires:         patch
 Requires:         perl(Env)
 Requires:         perl(Exporter)
 Requires:         perl(Fcntl)
