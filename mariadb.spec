@@ -158,7 +158,7 @@
 
 Name:             mariadb
 Version:          10.5.8
-Release:          6%{?with_debug:.debug}%{?dist}
+Release:          7%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1662,6 +1662,10 @@ fi
 %endif
 
 %changelog
+* Fri Feb 12 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.8-7
+- Enhance the logrotate script
+- Resolves: #1683981
+
 * Fri Feb 12 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.8-6
 - Fix Perl database driver dependency
 
