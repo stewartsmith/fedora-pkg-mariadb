@@ -158,7 +158,7 @@
 
 Name:             mariadb
 Version:          10.5.8
-Release:          5%{?with_debug:.debug}%{?dist}
+Release:          6%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -626,7 +626,7 @@ Provides:         mysql-perl = %{sameevr}
 %endif
 Conflicts:        community-mysql-server
 # mysqlhotcopy needs DBI/DBD support
-Requires:         perl(DBI) perl(DBD::mysql)
+Requires:         perl(DBI) perl(DBD::MariaDB)
 
 %description      server-utils
 This package contains all non-essential server utilities and scripts for
@@ -1662,6 +1662,9 @@ fi
 %endif
 
 %changelog
+* Fri Feb 12 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.8-6
+- Fix Perl database driver dependency
+
 * Wed Feb 10 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.8-5
 - Add support for S3 storage engine
 
