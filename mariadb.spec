@@ -1435,10 +1435,7 @@ fi
 
 %dir %{_libdir}/%{pkg_name}
 %dir %{_libdir}/%{pkg_name}/plugin
-# Change from root:root to mysql:mysql, so it can be accessed by the server
-%attr(0755,mysql,mysql) %dir %{_libdir}/%{pkg_name}/plugin/auth_pam_tool_dir
-%{_libdir}/security/pam_user_map.so
-%{_sysconfdir}/security/user_map.conf
+
 %{_libdir}/%{pkg_name}/plugin/*
 %{?with_oqgraph:%exclude %{_libdir}/%{pkg_name}/plugin/ha_oqgraph.so}
 %{?with_connect:%exclude %{_libdir}/%{pkg_name}/plugin/ha_connect.so}
@@ -1452,6 +1449,12 @@ fi
 %exclude %{_libdir}/%{pkg_name}/plugin/dialog.so
 %exclude %{_libdir}/%{pkg_name}/plugin/mysql_clear_password.so
 %endif
+
+%attr(0755,root,root) %dir %{_libdir}/%{pkg_name}/plugin/auth_pam_tool_dir
+# SUID-to-root binary. Access MUST be restricted (https://jira.mariadb.org/browse/MDEV-25126)
+%attr(4750,root,mysql) %{_libdir}/%{pkg_name}/plugin/auth_pam_tool_dir/auth_pam_tool
+%{_libdir}/security/pam_user_map.so
+%{_sysconfdir}/security/user_map.conf
 
 %{_mandir}/man1/aria_{chk,dump_log,ftdump,pack,read_log}.1*
 %{_mandir}/man1/galera_new_cluster.1*
