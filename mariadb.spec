@@ -61,6 +61,9 @@
 # hierarchies and more complex graph structures to be handled in a relational fashion
 %bcond_without oqgraph
 
+# PAM authentication plugin
+%bcond_without pam
+
 # Other plugins
 # S3 storage engine
 #   https://mariadb.com/kb/en/s3-storage-engine/
@@ -242,8 +245,6 @@ BuildRequires:    bison bison-devel
 
 %{?with_debug:BuildRequires:    valgrind-devel}
 
-# auth_pam.so plugin will be build if pam-devel is installed
-BuildRequires:    pam-devel
 # use either new enough version of pcre2 or provide bundles(pcre2)
 %{?with_unbundled_pcre:BuildRequires: pcre2-devel >= 10.34 pkgconf}
 %{!?with_unbundled_pcre:Provides: bundled(pcre2) = %{pcre_bundled_version}}
@@ -445,6 +446,7 @@ Recommends:       %{name}-backup%{?_isa} = %{sameevr}
 %{?with_sphinx:Suggests:       %{name}-sphinx-engine%{?_isa} = %{sameevr}}
 %{?with_oqgraph:Suggests:      %{name}-oqgraph-engine%{?_isa} = %{sameevr}}
 %{?with_connect:Suggests:      %{name}-connect-engine%{?_isa} = %{sameevr}}
+%{?with_pam:Suggests:          %{name}-pam%{?_isa} = %{sameevr}}
 
 Suggests:         mytop
 Suggests:         logrotate
@@ -586,6 +588,21 @@ BuildRequires:    krb5-devel
 %description      gssapi-server
 GSSAPI authentication server-side plugin for MariaDB for passwordless login.
 This plugin includes support for Kerberos on Unix.
+%endif
+
+
+%if %{with pam}
+%package          pam
+Summary:          PAM authentication plugin for the MariaDB server
+
+Requires:         %{name}-server%{?_isa} = %{sameevr}
+# This subpackage NEED the 'mysql' user/group (created during mariadb-server %pre) to be available prior installation
+Requires(pre):    %{name}-server%{?_isa} = %{sameevr}
+
+BuildRequires:    pam-devel
+
+%description      pam
+PAM authentication server-side plugin for MariaDB.
 %endif
 
 
@@ -1450,11 +1467,10 @@ fi
 %exclude %{_libdir}/%{pkg_name}/plugin/mysql_clear_password.so
 %endif
 
-%attr(0755,root,root) %dir %{_libdir}/%{pkg_name}/plugin/auth_pam_tool_dir
-# SUID-to-root binary. Access MUST be restricted (https://jira.mariadb.org/browse/MDEV-25126)
-%attr(4750,root,mysql) %{_libdir}/%{pkg_name}/plugin/auth_pam_tool_dir/auth_pam_tool
-%{_libdir}/security/pam_user_map.so
-%{_sysconfdir}/security/user_map.conf
+# PAM plugin; moved to a standalone sub-package
+%exclude %{_libdir}/%{pkg_name}/plugin/{auth_pam_v1.so,auth_pam.so}
+%exclude %dir %{_libdir}/%{pkg_name}/plugin/auth_pam_tool_dir
+%exclude %{_libdir}/%{pkg_name}/plugin/auth_pam_tool_dir/auth_pam_tool
 
 %{_mandir}/man1/aria_{chk,dump_log,ftdump,pack,read_log}.1*
 %{_mandir}/man1/galera_new_cluster.1*
@@ -1575,6 +1591,16 @@ fi
 %files gssapi-server
 %{_libdir}/%{pkg_name}/plugin/auth_gssapi.so
 %config(noreplace) %{_sysconfdir}/my.cnf.d/auth_gssapi.cnf
+%endif
+
+%if %{with pam}
+%files pam
+%{_libdir}/%{pkg_name}/plugin/{auth_pam_v1.so,auth_pam.so}
+%attr(0755,root,root) %dir %{_libdir}/%{pkg_name}/plugin/auth_pam_tool_dir
+# SUID-to-root binary. Access MUST be restricted (https://jira.mariadb.org/browse/MDEV-25126)
+%attr(4750,root,mysql) %{_libdir}/%{pkg_name}/plugin/auth_pam_tool_dir/auth_pam_tool
+%{_libdir}/security/pam_user_map.so
+%{_sysconfdir}/security/user_map.conf
 %endif
 
 %if %{with sphinx}
