@@ -969,23 +969,30 @@ rm %{_vpath_builddir}/scripts/my.cnf
 # use different config file name for each variant of server (mariadb / mysql)
 mv %{buildroot}%{_sysconfdir}/my.cnf.d/server.cnf %{buildroot}%{_sysconfdir}/my.cnf.d/%{pkg_name}-server.cnf
 
-# remove SysV init script and a symlink to that, we use systemd
+# Remove upstream SysV init script and a symlink to that, we use systemd
 rm %{buildroot}%{_libexecdir}/rcmysql
+# Remove upstream Systemd service files
+#   We don't use this location of service files
+#   Note: currently there still are "mariadb" named systemd service files on this location
+rm %{buildroot}%{_datadir}/%{pkg_name}/systemd/{mysql,mysqld}.service
+# These may come handy in a future, but right now we use our own services
+rm %{buildroot}/usr/lib/systemd/system/{mysql,mysqld}.service
+
 # install systemd unit files and scripts for handling server startup
 install -D -p -m 644 %{_vpath_builddir}/scripts/mysql.service %{buildroot}%{_unitdir}/%{daemon_name}.service
 install -D -p -m 644 %{_vpath_builddir}/scripts/mysql@.service %{buildroot}%{_unitdir}/%{daemon_name}@.service
-
-# Install downstream version of tmpfiles
-install -D -p -m 0644 %{_vpath_builddir}/scripts/mysql.tmpfiles.d %{buildroot}%{_tmpfilesdir}/%{name}.conf
-%if 0%{?mysqld_pid_dir:1}
-echo "d %{pidfiledir} 0755 mysql mysql -" >>%{buildroot}%{_tmpfilesdir}/%{name}.conf
-%endif
 
 # helper scripts for service starting
 install -p -m 755 %{_vpath_builddir}/scripts/mysql-prepare-db-dir %{buildroot}%{_libexecdir}/mysql-prepare-db-dir
 install -p -m 755 %{_vpath_builddir}/scripts/mysql-check-socket %{buildroot}%{_libexecdir}/mysql-check-socket
 install -p -m 755 %{_vpath_builddir}/scripts/mysql-check-upgrade %{buildroot}%{_libexecdir}/mysql-check-upgrade
 install -p -m 644 %{_vpath_builddir}/scripts/mysql-scripts-common %{buildroot}%{_libexecdir}/mysql-scripts-common
+
+# Install downstream version of tmpfiles
+install -D -p -m 0644 %{_vpath_builddir}/scripts/mysql.tmpfiles.d %{buildroot}%{_tmpfilesdir}/%{name}.conf
+%if 0%{?mysqld_pid_dir:1}
+echo "d %{pidfiledir} 0755 mysql mysql -" >>%{buildroot}%{_tmpfilesdir}/%{name}.conf
+%endif
 
 # install aditional galera selinux policy
 %if %{with galera}
@@ -1044,12 +1051,6 @@ install -p -m 0644 %{SOURCE6} %{basename:%{SOURCE6}}
 install -p -m 0644 %{SOURCE7} %{basename:%{SOURCE7}}
 install -p -m 0644 %{SOURCE16} %{basename:%{SOURCE16}}
 install -p -m 0644 %{SOURCE71} %{basename:%{SOURCE71}}
-
-# Delete upstreams service files
-# We don't use this location of service files
-rm %{buildroot}%{_datadir}/%{pkg_name}/systemd/{mysql,mysqld}.service
-# These may come handy in a future, but right now we use our own services
-rm %{buildroot}/usr/lib/systemd/system/{mysql,mysqld}.service
 
 # install galera config file
 %if %{with galera}
