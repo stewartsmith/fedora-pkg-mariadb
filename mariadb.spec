@@ -158,7 +158,7 @@
 
 Name:             mariadb
 Version:          10.5.9
-Release:          2%{?with_debug:.debug}%{?dist}
+Release:          3%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1662,6 +1662,9 @@ fi
 %endif
 
 %changelog
+* Thu Mar 18 2021 Michal Schorm <mschorm@redhat.com> - 10.5.9-3
+- Fixed permissions on files from PAMv2 plugin
+
 * Tue Mar 02 2021 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 3:10.5.9-2
 - Rebuilt for updated systemd-rpm-macros
   See https://pagure.io/fesco/issue/2583.
