@@ -986,9 +986,7 @@ mv %{buildroot}%{_sysconfdir}/my.cnf.d/server.cnf %{buildroot}%{_sysconfdir}/my.
 # Remove upstream SysV init script and a symlink to that, we use systemd
 rm %{buildroot}%{_libexecdir}/rcmysql
 # Remove upstream Systemd service files
-#   We don't use this location of service files
-#   Note: currently there still are "mariadb" named systemd service files on this location
-rm %{buildroot}%{_datadir}/%{pkg_name}/systemd/{mysql,mysqld}.service
+rm -r %{buildroot}%{_datadir}/%{pkg_name}/systemd
 # Our downstream Systemd service file have set aliases to the "mysql" names in the [Install] section.
 # They can be enabled / disabled by "systemctl enable / diable <service_name>"
 rm %{buildroot}%{_unitdir}/{mysql,mysqld}.service
@@ -1404,7 +1402,6 @@ fi
 %{_bindir}/clustercheck
 %{_bindir}/galera_new_cluster
 %{_bindir}/galera_recovery
-%{_datadir}/%{pkg_name}/systemd/use_galera_new_cluster.conf
 %config(noreplace) %{_sysconfdir}/my.cnf.d/galera.cnf
 %attr(0640,root,root) %ghost %config(noreplace) %{_sysconfdir}/sysconfig/clustercheck
 %{_datadir}/selinux/packages/%{name}/%{name}-server-galera.pp
@@ -1526,11 +1523,6 @@ fi
 %{_datadir}/%{pkg_name}/policy/selinux/README
 %{_datadir}/%{pkg_name}/policy/selinux/mariadb-server.*
 %{_datadir}/%{pkg_name}/policy/selinux/mariadb.*
-%{_datadir}/%{pkg_name}/systemd/mariadb.service
-# mariadb@ is installed only when we have cmake newer than 3.3
-%if 0%{?fedora} || 0%{?rhel} > 7
-%{_datadir}/%{pkg_name}/systemd/mariadb@.service
-%endif
 
 %{_unitdir}/%{daemon_name}*
 %{?with_tokudb:%exclude %{_unitdir}/mariadb.service.d/tokudb.conf}
