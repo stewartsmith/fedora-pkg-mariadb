@@ -218,8 +218,6 @@ Patch10:          %{pkgnamepatch}-ssl-cipher-tests.patch
 Patch11:          %{pkgnamepatch}-pcdir.patch
 #   Patch15:  Add option to edit groonga's and groonga-normalizer-mysql install path
 Patch15:          %{pkgnamepatch}-groonga.patch
-#   Patch16: Workaround for "chown 0" with priviledges dropped to "mysql" user
-Patch16:          %{pkgnamepatch}-auth_pam_tool_dir.patch
 
 BuildRequires:    make
 BuildRequires:    cmake gcc-c++
@@ -751,7 +749,6 @@ rm -r storage/rocksdb/
 %patch10 -p1
 %patch11 -p1
 %patch15 -p1
-%patch16 -p1
 
 # generate a list of tests that fail, but are not disabled by upstream
 cat %{SOURCE50} | tee -a mysql-test/unstable-tests
