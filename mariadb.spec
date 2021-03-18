@@ -975,8 +975,9 @@ rm %{buildroot}%{_libexecdir}/rcmysql
 #   We don't use this location of service files
 #   Note: currently there still are "mariadb" named systemd service files on this location
 rm %{buildroot}%{_datadir}/%{pkg_name}/systemd/{mysql,mysqld}.service
-# These may come handy in a future, but right now we use our own services
-rm %{buildroot}/usr/lib/systemd/system/{mysql,mysqld}.service
+# Our downstream Systemd service file have set aliases to the "mysql" names in the [Install] section.
+# They can be enabled / disabled by "systemctl enable / diable <service_name>"
+rm %{buildroot}%{_unitdir}/{mysql,mysqld}.service
 
 # install systemd unit files and scripts for handling server startup
 install -D -p -m 644 %{_vpath_builddir}/scripts/mysql.service %{buildroot}%{_unitdir}/%{daemon_name}.service
