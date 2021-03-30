@@ -161,7 +161,7 @@
 
 Name:             mariadb
 Version:          10.5.9
-Release:          4%{?with_debug:.debug}%{?dist}
+Release:          5%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1680,6 +1680,9 @@ fi
 %endif
 
 %changelog
+* Tue Mar 30 2021 Jonathan Wakely <jwakely@redhat.com> - 3:10.5.9-5
+- Rebuilt for removed libstdc++ symbol (#1937698)
+
 * Thu Mar 18 2021 Michal Schorm <mschorm@redhat.com> - 10.5.9-4
 - Move PAM plugin to standalone subpackage
 
