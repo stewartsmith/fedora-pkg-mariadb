@@ -171,13 +171,13 @@ License:          GPLv2 and LGPLv2
 Source0:          https://downloads.mariadb.org/interstitial/mariadb-%{version}/source/mariadb-%{version}.tar.gz
 Source2:          mysql_config_multilib.sh
 Source3:          my.cnf.in
-Source6:          README.mysql-docs
-Source10:         mysql.tmpfiles.d.in
+Source6:          README.mariadb-docs
+Source10:         mariadb.tmpfiles.d.in
 Source11:         mysql.service.in
-Source12:         mysql-prepare-db-dir.sh
-Source14:         mysql-check-socket.sh
-Source15:         mysql-scripts-common.sh
-Source16:         mysql-check-upgrade.sh
+Source12:         mariadb-prepare-db-dir.sh
+Source14:         mariadb-check-socket.sh
+Source15:         mariadb-scripts-common.sh
+Source16:         mariadb-check-upgrade.sh
 Source18:         mysql@.service.in
 Source50:         rh-skipped-tests-base.list
 Source51:         rh-skipped-tests-arm.list
@@ -994,18 +994,18 @@ install -D -p -m 644 %{_vpath_builddir}/scripts/mysql.service %{buildroot}%{_uni
 install -D -p -m 644 %{_vpath_builddir}/scripts/mysql@.service %{buildroot}%{_unitdir}/%{daemon_name}@.service
 
 # helper scripts for service starting
-install -p -m 755 %{_vpath_builddir}/scripts/mysql-prepare-db-dir %{buildroot}%{_libexecdir}/mysql-prepare-db-dir
-install -p -m 755 %{_vpath_builddir}/scripts/mysql-check-socket %{buildroot}%{_libexecdir}/mysql-check-socket
-install -p -m 755 %{_vpath_builddir}/scripts/mysql-check-upgrade %{buildroot}%{_libexecdir}/mysql-check-upgrade
-install -p -m 644 %{_vpath_builddir}/scripts/mysql-scripts-common %{buildroot}%{_libexecdir}/mysql-scripts-common
+install -p -m 755 %{_vpath_builddir}/scripts/mariadb-prepare-db-dir %{buildroot}%{_libexecdir}/mariadb-prepare-db-dir
+install -p -m 755 %{_vpath_builddir}/scripts/mariadb-check-socket %{buildroot}%{_libexecdir}/mariadb-check-socket
+install -p -m 755 %{_vpath_builddir}/scripts/mariadb-check-upgrade %{buildroot}%{_libexecdir}/mariadb-check-upgrade
+install -p -m 644 %{_vpath_builddir}/scripts/mariadb-scripts-common %{buildroot}%{_libexecdir}/mariadb-scripts-common
 
 # Install downstream version of tmpfiles
-install -D -p -m 0644 %{_vpath_builddir}/scripts/mysql.tmpfiles.d %{buildroot}%{_tmpfilesdir}/%{name}.conf
+install -D -p -m 0644 %{_vpath_builddir}/scripts/mariadb.tmpfiles.d %{buildroot}%{_tmpfilesdir}/%{name}.conf
 %if 0%{?mysqld_pid_dir:1}
 echo "d %{pidfiledir} 0755 mysql mysql -" >>%{buildroot}%{_tmpfilesdir}/%{name}.conf
 %endif
 
-# install aditional galera selinux policy
+# install additional galera selinux policy
 %if %{with galera}
 install -p -m 644 -D selinux/%{name}-server-galera.pp %{buildroot}%{_datadir}/selinux/packages/%{name}/%{name}-server-galera.pp
 %endif
@@ -1523,10 +1523,10 @@ fi
 %{_unitdir}/%{daemon_name}*
 %{?with_tokudb:%exclude %{_unitdir}/mariadb.service.d/tokudb.conf}
 
-%{_libexecdir}/mysql-prepare-db-dir
-%{_libexecdir}/mysql-check-socket
-%{_libexecdir}/mysql-check-upgrade
-%{_libexecdir}/mysql-scripts-common
+%{_libexecdir}/mariadb-prepare-db-dir
+%{_libexecdir}/mariadb-check-socket
+%{_libexecdir}/mariadb-check-upgrade
+%{_libexecdir}/mariadb-scripts-common
 
 %attr(0755,mysql,mysql) %dir %{pidfiledir}
 %attr(0755,mysql,mysql) %dir %{dbdatadir}

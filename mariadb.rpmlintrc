@@ -51,8 +51,8 @@ addFilter(r'incoherent-logrotate-file /etc/logrotate.d/mariadb')
 addFilter(r'non-executable-in-bin /usr/bin/wsrep_sst_common 644')
 addFilter(r'script-without-shebang /usr/bin/wsrep_sst_common')
 addFilter(r'non-executable-script /usr/bin/wsrep_sst_common 644 None')
-# mysql-scripts-common has a simmilar issue
-addFilter(r'non-executable-script /usr/libexec/mysql-scripts-common 644 /bin/sh')
+# mariadb-scripts-common has a similar issue
+addFilter(r'non-executable-script /usr/libexec/mariadb-scripts-common 644 /bin/sh')
 # Seems pretty standard to me ...
 addFilter(r'non-standard-dir-perm /var/log/mariadb 750')
 
