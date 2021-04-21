@@ -166,14 +166,12 @@ Epoch:            3
 
 Summary:          A very fast and robust SQL database server
 URL:              http://mariadb.org
-# Exceptions allow client libraries to be linked with most open source SW, not only GPL code.  See README.mysql-license
-License:          GPLv2 with exceptions and LGPLv2 and BSD
+License:          GPLv2 and LGPLv2
 
 Source0:          https://downloads.mariadb.org/interstitial/mariadb-%{version}/source/mariadb-%{version}.tar.gz
 Source2:          mysql_config_multilib.sh
 Source3:          my.cnf.in
 Source6:          README.mysql-docs
-Source7:          README.mysql-license
 Source10:         mysql.tmpfiles.d.in
 Source11:         mysql.service.in
 Source12:         mysql-prepare-db-dir.sh
@@ -1061,7 +1059,6 @@ ln -s %{_libexecdir}/mariadbd %{buildroot}%{_sbindir}/mariadbd
 
 # copy additional docs into build tree so %%doc will find them
 install -p -m 0644 %{SOURCE6} %{basename:%{SOURCE6}}
-install -p -m 0644 %{SOURCE7} %{basename:%{SOURCE7}}
 install -p -m 0644 %{SOURCE16} %{basename:%{SOURCE16}}
 install -p -m 0644 %{SOURCE71} %{basename:%{SOURCE71}}
 
