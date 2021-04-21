@@ -48,7 +48,7 @@ done
 # must correspond with values defined in mariadbd-safe script and source
 # code itself.
 
-server_sections="mysqld_safe mysqld server mysqld-@MAJOR_VERSION@.@MINOR_VERSION@ mariadb mariadb-@MAJOR_VERSION@.@MINOR_VERSION@ client-server"
+server_sections="mysqld_safe mysqld server mysqld-@MAJOR_VERSION@.@MINOR_VERSION@ mariadb mariadb-@MAJOR_VERSION@.@MINOR_VERSION@ mariadbd mariadbd-@MAJOR_VERSION@.@MINOR_VERSION@ client-server galera"
 
 get_mysql_option "$server_sections" datadir "@MYSQL_DATADIR@"
 datadir="$result"
