@@ -327,11 +327,11 @@ Conflicts:        %{?fedora:community-}mysql
 %{!?_licensedir:%global license %doc}
 
 %description
-MariaDB is a community developed branch of MySQL - a multi-user, multi-threaded
+MariaDB is a community developed fork from MySQL - a multi-user, multi-threaded
 SQL database server. It is a client/server implementation consisting of
-a server daemon (mysqld) and many different client programs and libraries.
+a server daemon (mariadbd) and many different client programs and libraries.
 The base package contains the standard MariaDB/MySQL client programs and
-generic MySQL files.
+utilities.
 
 
 %if %{with clibrary}
@@ -415,10 +415,10 @@ Requires:         rsync
 
 %description      server-galera
 MariaDB is a multi-user, multi-threaded SQL database server. It is a
-client/server implementation consisting of a server daemon (mysqld)
+client/server implementation consisting of a server daemon (mariadbd)
 and many different client programs and libraries. This package contains
-the MariaDB server and some accompanying files and directories.
-MariaDB is a community developed branch of MySQL.
+added files to allow MariaDB server to operate as a Galera cluster
+member. MariaDB is a community developed fork originally from MySQL.
 %endif
 
 
@@ -452,7 +452,7 @@ Suggests:         logrotate
 Requires:         %{_sysconfdir}/my.cnf
 Requires:         %{_sysconfdir}/my.cnf.d
 
-# Aditional SELinux rules (common for MariaDB & MySQL) shipped in a separate package
+# Additional SELinux rules (common for MariaDB & MySQL) shipped in a separate package
 # For cases, where we want to fix a SELinux issues in MariaDB sooner than patched selinux-policy-targeted package is released
 %if %require_mysql_selinux
 Requires:         (mysql-selinux if selinux-policy-targeted)
@@ -486,10 +486,10 @@ Obsoletes:      %{name}-tokudb-engine <= %{sameevr}
 
 %description      server
 MariaDB is a multi-user, multi-threaded SQL database server. It is a
-client/server implementation consisting of a server daemon (mysqld)
+client/server implementation consisting of a server daemon (mariadbd)
 and many different client programs and libraries. This package contains
 the MariaDB server and some accompanying files and directories.
-MariaDB is a community developed branch of MySQL.
+MariaDB is a community developed fork from MySQL.
 
 
 %if %{with oqgraph}
@@ -665,11 +665,11 @@ MariaDB is a multi-user, multi-threaded SQL database server.
 MariaDB is a community developed branch of MySQL.
 %if %{with clibrary}
 This package contains everything needed for developing MariaDB/MySQL client
-and server applications.
+and server plugins and applications.
 %else
 This package contains everything needed for developing MariaDB/MySQL server
-applications. For developing client applications, use mariadb-connector-c
-package.
+plugins and applications. For developing client applications, use
+mariadb-connector-c package.
 %endif
 %endif
 
@@ -688,7 +688,7 @@ Provides:         mysql-embedded%{?_isa} = %{sameevr}
 MariaDB is a multi-user, multi-threaded SQL database server. This
 package contains a version of the MariaDB server that can be embedded
 into a client application instead of running as a separate process.
-MariaDB is a community developed branch of MySQL.
+MariaDB is a community developed fork from MySQL.
 
 
 %package          embedded-devel
@@ -705,7 +705,7 @@ Conflicts:        %{?fedora:community-}mysql-embedded-devel
 
 %description      embedded-devel
 MariaDB is a multi-user, multi-threaded SQL database server.
-MariaDB is a community developed branch of MySQL.
+MariaDB is a community developed fork from MySQL.
 This package contains files needed for developing and testing with
 the embedded version of the MariaDB server.
 %endif
@@ -737,7 +737,7 @@ Provides:         mysql-test%{?_isa} = %{sameevr}
 
 %description      test
 MariaDB is a multi-user, multi-threaded SQL database server.
-MariaDB is a community developed branch of MySQL.
+MariaDB is a community developed fork from MySQL.
 This package contains the regression test suite distributed with the MariaDB
 sources.
 %endif
