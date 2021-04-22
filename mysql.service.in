@@ -53,7 +53,6 @@ ExecStartPost=@libexecdir@/mariadb-check-upgrade
 # See also bind-address MariaDB option.
 PrivateNetwork=false
 
-KillMode=process
 KillSignal=SIGTERM
 
 # Don't want to see an automated SIGKILL ever
