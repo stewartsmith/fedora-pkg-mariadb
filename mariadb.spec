@@ -168,7 +168,12 @@ Summary:          A very fast and robust SQL database server
 URL:              http://mariadb.org
 License:          GPLv2 and LGPLv2
 
-Source0:          https://downloads.mariadb.org/interstitial/mariadb-%{version}/source/mariadb-%{version}.tar.gz
+# Original upstream sources archive URL
+# Source0:          https://downloads.mariadb.org/interstitial/mariadb-%{version}/source/mariadb-%{version}.tar.gz
+# Non-existent URL containing correct archive name
+#   The archive was created by executing the "generate-modified-sources.sh" script
+Source0:          https://fedoraproject.org/mariadb-%{version}-downstream_modified.tar.gz
+
 Source2:          mysql_config_multilib.sh
 Source3:          my.cnf.in
 Source6:          README.mariadb-docs
@@ -744,7 +749,7 @@ sources.
 
 
 %prep
-%setup -q -n mariadb-%{version}
+%setup -q -n mariadb-%{version}-downstream_modified
 
 # Remove JAR files that upstream puts into tarball
 find . -name "*.jar" -type f -exec rm --verbose -f {} \;
