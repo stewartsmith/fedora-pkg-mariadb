@@ -319,7 +319,7 @@ Provides:         mysql-compat-client%{?_isa} = %{sameevr}
 
 Suggests:         %{name}-server%{?_isa} = %{sameevr}
 
-Conflicts:        community-mysql
+Conflicts:        %{?fedora:community-}mysql
 
 # Filtering: https://docs.fedoraproject.org/en-US/packaging-guidelines/AutoProvidesAndRequiresFiltering/
 %global __requires_exclude ^perl\\((hostnames|lib::mtr|lib::v1|mtr_|My::|wsrep)
@@ -477,7 +477,7 @@ Provides:         mysql-server%{?_isa} = %{sameevr}
 Provides:         mysql-compat-server = %{sameevr}
 Provides:         mysql-compat-server%{?_isa} = %{sameevr}
 %endif
-Conflicts:        community-mysql-server
+Conflicts:        %{?fedora:community-}mysql-server
 
 # Bench subpackage has been deprecated in F32
 Obsoletes: %{name}-bench <= %{sameevr}
@@ -638,7 +638,7 @@ Requires:         %{name}-server%{?_isa} = %{sameevr}
 %if %{with mysql_names}
 Provides:         mysql-perl = %{sameevr}
 %endif
-Conflicts:        community-mysql-server
+Conflicts:        %{?fedora:community-}mysql-server
 # mysqlhotcopy needs DBI/DBD support
 Requires:         perl(DBI) perl(DBD::MariaDB)
 
@@ -660,7 +660,7 @@ Requires:         mariadb-connector-c-devel >= 3.0
 Provides:         mysql-devel = %{sameevr}
 Provides:         mysql-devel%{?_isa} = %{sameevr}
 %endif
-Conflicts:        community-mysql-devel
+Conflicts:        %{?fedora:community-}mysql-devel
 
 %description      devel
 MariaDB is a multi-user, multi-threaded SQL database server.
@@ -703,7 +703,7 @@ Requires:         libaio-devel
 Provides:         mysql-embedded-devel = %{sameevr}
 Provides:         mysql-embedded-devel%{?_isa} = %{sameevr}
 %endif
-Conflicts:        community-mysql-embedded-devel
+Conflicts:        %{?fedora:community-}mysql-embedded-devel
 
 %description      embedded-devel
 MariaDB is a multi-user, multi-threaded SQL database server.
@@ -731,7 +731,7 @@ Requires:         perl(Socket)
 Requires:         perl(Sys::Hostname)
 Requires:         perl(Test::More)
 Requires:         perl(Time::HiRes)
-Conflicts:        community-mysql-test
+Conflicts:        %{?fedora:community-}mysql-test
 %if %{with mysql_names}
 Provides:         mysql-test = %{sameevr}
 Provides:         mysql-test%{?_isa} = %{sameevr}
