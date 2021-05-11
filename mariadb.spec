@@ -32,10 +32,6 @@
 
 
 
-# TokuDB engine - DEPRECATED !
-#   https://mariadb.com/kb/en/mariadb/tokudb/
-#   TokuDB engine is available only for x86_64
-#   The Percona upstream deprecated the SE. It is not part of MariaDB 10.5
 # Mroonga engine
 #   https://mariadb.com/kb/en/mariadb/about-mroonga/
 #   Current version in MariaDB, 7.07, only supports the x86_64
@@ -46,12 +42,9 @@
 #   RocksDB may be built with jemalloc, if specified in CMake
 %ifarch x86_64
 %if 0%{?fedora}
-# TokuDB is deprecated in MariaDB 10.5 and later
-%bcond_with tokudb
 %bcond_without mroonga
 %bcond_without rocksdb
 %else
-%bcond_with tokudb
 %bcond_with mroonga
 %bcond_with rocksdb
 %endif
@@ -445,7 +438,6 @@ Recommends:       %{name}-backup%{?_isa} = %{sameevr}
 %{?with_cracklib:Recommends:   %{name}-cracklib-password-check%{?_isa} = %{sameevr}}
 %{?with_gssapi:Recommends:     %{name}-gssapi-server%{?_isa} = %{sameevr}}
 %{?with_rocksdb:Suggests:      %{name}-rocksdb-engine%{?_isa} = %{sameevr}}
-%{?with_tokudb:Suggests:       %{name}-tokudb-engine%{?_isa} = %{sameevr}}
 %{?with_sphinx:Suggests:       %{name}-sphinx-engine%{?_isa} = %{sameevr}}
 %{?with_oqgraph:Suggests:      %{name}-oqgraph-engine%{?_isa} = %{sameevr}}
 %{?with_connect:Suggests:      %{name}-connect-engine%{?_isa} = %{sameevr}}
@@ -485,9 +477,7 @@ Conflicts:        %{?fedora:community-}mysql-server
 # Bench subpackage has been deprecated in F32
 Obsoletes: %{name}-bench <= %{sameevr}
 
-%if %{without tokudb}
 Obsoletes:      %{name}-tokudb-engine <= %{sameevr}
-%endif
 
 %description      server
 MariaDB is a multi-user, multi-threaded SQL database server. It is a
@@ -551,18 +541,6 @@ Provides:         bundled(rocksdb)
 
 %description      rocksdb-engine
 The RocksDB storage engine is used for high performance servers on SSD drives.
-%endif
-
-
-%if %{with tokudb}
-%package          tokudb-engine
-Summary:          The TokuDB storage engine for MariaDB
-Requires:         %{name}-server%{?_isa} = %{sameevr}
-BuildRequires:    jemalloc-devel
-Requires:         jemalloc
-
-%description      tokudb-engine
-The TokuDB storage engine from Percona.
 %endif
 
 
@@ -755,8 +733,6 @@ sources.
 find . -name "*.jar" -type f -exec rm --verbose -f {} \;
 # Remove testsuite for the mariadb-connector-c
 rm -rf libmariadb/unittest
-# Remove python scripts remains from tokudb upstream (those files are not used anyway)
-rm -rf storage/tokudb/mysql-test/tokudb/t/*.py
 %if %{without rocksdb}
 rm -r storage/rocksdb/
 %endif
@@ -876,7 +852,6 @@ fi
          -DCONC_WITH_SSL=%{?with_clibrary:ON}%{!?with_clibrary:NO} \
          -DWITH_SSL=system \
          -DWITH_ZLIB=system \
-         -DWITH_JEMALLOC=%{?with_tokudb:yes}%{!?with_tokudb:no} \
          -DLZ4_LIBS=%{_libdir}/liblz4.so \
          -DLZ4_LIBS=%{?with_lz4:%{_libdir}/liblz4.so}%{!?with_lz4:} \
          -DWITH_INNODB_LZ4=%{?with_lz4:ON}%{!?with_lz4:OFF} \
@@ -886,7 +861,6 @@ fi
          -DPLUGIN_CRACKLIB_PASSWORD_CHECK=%{?with_cracklib:DYNAMIC}%{!?with_cracklib:NO} \
          -DPLUGIN_ROCKSDB=%{?with_rocksdb:DYNAMIC}%{!?with_rocksdb:NO} \
          -DPLUGIN_SPHINX=%{?with_sphinx:DYNAMIC}%{!?with_sphinx:NO} \
-         -DPLUGIN_TOKUDB=%{?with_tokudb:DYNAMIC}%{!?with_tokudb:NO} \
          -DPLUGIN_CONNECT=%{?with_connect:DYNAMIC}%{!?with_connect:NO} \
          -DPLUGIN_S3=%{?with_s3:DYNAMIC}%{!?with_s3:NO} \
          -DPLUGIN_CLIENT_ED25519=OFF \
@@ -1156,14 +1130,6 @@ rm %{buildroot}%{_mandir}/man1/msql2mysql.1*
 rm %{buildroot}%{_mandir}/man1/{mysql,mariadb}.1*
 rm %{buildroot}%{_mandir}/man1/mysql{access,admin,binlog,check,dump,_find_rows,import,_plugin,show,slap,_waitpid}.1*
 rm %{buildroot}%{_mandir}/man1/mariadb-{access,admin,binlog,check,dump,find-rows,import,plugin,show,slap,waitpid}.1*
-%endif
-
-%if %{with tokudb}
-%if 0%{?fedora} || 0%{?rhel} > 7
-# Move the upstream file to the correct location
-mkdir -p %{buildroot}%{_unitdir}/mariadb.service.d
-mv %{buildroot}/etc/systemd/system/mariadb.service.d/tokudb.conf %{buildroot}%{_unitdir}/mariadb.service.d/tokudb.conf
-%endif
 %endif
 
 %if %{without config}
@@ -1457,7 +1423,6 @@ fi
 %{?with_connect:%exclude %{_libdir}/%{pkg_name}/plugin/ha_connect.so}
 %{?with_cracklib:%exclude %{_libdir}/%{pkg_name}/plugin/cracklib_password_check.so}
 %{?with_rocksdb:%exclude %{_libdir}/%{pkg_name}/plugin/ha_rocksdb.so}
-%{?with_tokudb:%exclude %{_libdir}/%{pkg_name}/plugin/ha_tokudb.so}
 %{?with_gssapi:%exclude %{_libdir}/%{pkg_name}/plugin/auth_gssapi.so}
 %{?with_sphinx:%exclude %{_libdir}/%{pkg_name}/plugin/ha_sphinx.so}
 %{?with_s3:%exclude %{_libdir}/%{pkg_name}/plugin/ha_s3.so}
@@ -1526,7 +1491,6 @@ fi
 %{_datadir}/%{pkg_name}/policy/selinux/mariadb.*
 
 %{_unitdir}/%{daemon_name}*
-%{?with_tokudb:%exclude %{_unitdir}/mariadb.service.d/tokudb.conf}
 
 %{_libexecdir}/mariadb-prepare-db-dir
 %{_libexecdir}/mariadb-check-socket
@@ -1567,17 +1531,6 @@ fi
 %{_libdir}/%{pkg_name}/plugin/ha_rocksdb.so
 %{_mandir}/man1/{mysql_,mariadb-}ldb.1*
 %{_mandir}/man1/myrocks_hotbackup.1*
-%endif
-
-%if %{with tokudb}
-%files tokudb-engine
-%{_bindir}/tokuftdump
-%{_bindir}/tokuft_logprint
-%{_mandir}/man1/tokuftdump.1*
-%{_mandir}/man1/tokuft_logprint.1*
-%config(noreplace) %{_sysconfdir}/my.cnf.d/tokudb.cnf
-%{_libdir}/%{pkg_name}/plugin/ha_tokudb.so
-%{_unitdir}/mariadb.service.d/tokudb.conf
 %endif
 
 %if %{with gssapi}
