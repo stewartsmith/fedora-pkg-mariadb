@@ -1676,23 +1676,23 @@ fi
 %endif
 
 %changelog
-* Tue May 11 2021 Michal Schorm <mschorm@redhat.com> - 10.5.10-1
+* Tue May 11 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.10-1
 - Rebase to 10.5.10
 
 * Tue Mar 30 2021 Jonathan Wakely <jwakely@redhat.com> - 3:10.5.9-5
 - Rebuilt for removed libstdc++ symbol (#1937698)
 
-* Thu Mar 18 2021 Michal Schorm <mschorm@redhat.com> - 10.5.9-4
+* Thu Mar 18 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.9-4
 - Move PAM plugin to standalone subpackage
 
-* Thu Mar 18 2021 Michal Schorm <mschorm@redhat.com> - 10.5.9-3
+* Thu Mar 18 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.9-3
 - Fixed permissions on files from PAMv2 plugin
 
 * Tue Mar 02 2021 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 3:10.5.9-2
 - Rebuilt for updated systemd-rpm-macros
   See https://pagure.io/fesco/issue/2583.
 
-* Wed Feb 24 2021 Michal Schorm <mschorm@redhat.com> - 10.5.9-1
+* Wed Feb 24 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.9-1
 - Rebase to 10.5.9
 
 * Tue Feb 16 2021 Lukas Javorsky <ljavorsk@redhat.com> - 3:10.5.8-8
@@ -1715,48 +1715,48 @@ fi
 * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3:10.5.8-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
-* Fri Dec 11 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.8-2
+* Fri Dec 11 2020 Lukas Javorsky <ljavorsk@redhat.com> - 3:10.5.8-2
 - Add tokudb-engine to obsoletes
 - Resolves: #1906559
 
-* Wed Nov 11 2020 Michal Schorm <mschorm@redhat.com> - 10.5.8-1
+* Wed Nov 11 2020 Michal Schorm <mschorm@redhat.com> - 3:10.5.8-1
 - Rebase to 10.5.8
 
-* Fri Nov 06 2020 Michal Schorm <mschorm@redhat.com> - 10.5.7-1
+* Fri Nov 06 2020 Michal Schorm <mschorm@redhat.com> - 3:10.5.7-1
 - Rebase to 10.5.7
 
-* Mon Sep 21 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.5-1
+* Mon Sep 21 2020 Lukas Javorsky <ljavorsk@redhat.com> - 3:10.5.5-1
 - Rebase to 10.5.5
 - Fix mariadb-ownsetup
 - Add manual for aria_s3_copy
 
-* Wed Sep 16 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.4-1
+* Wed Sep 16 2020 Lukas Javorsky <ljavorsk@redhat.com> - 3:10.5.4-1
 - Rebase to 10.5.4
 - Add spider.cnf to the server config files
 
-* Mon Sep 14 2020 Lukas Javorsky <ljavorsk@redhat.com> - 10.5.3-1
+* Mon Sep 14 2020 Lukas Javorsky <ljavorsk@redhat.com> - 3:10.5.3-1
 - Rebase to 10.5.3
 
-* Fri Sep 11 2020 Michal Schorm <mschorm@redhat.com> - 10.5.2-1
+* Fri Sep 11 2020 Michal Schorm <mschorm@redhat.com> - 3:10.5.2-1
 - Test rebase to 10.5.2 - Beta
 - TokuDB SE has been deprecated
 
-* Thu Sep 10 2020 Michal Schorm <mschorm@redhat.com> - 10.5.1-1
+* Thu Sep 10 2020 Michal Schorm <mschorm@redhat.com> - 3:10.5.1-1
 - Test rebase to 10.5.1 - Beta
 
-* Thu Sep 10 2020 Michal Schorm <mschorm@redhat.com> - 10.5.0-1
+* Thu Sep 10 2020 Michal Schorm <mschorm@redhat.com> - 3:10.5.0-1
 - Test rebase to 10.5.0 - Alpha
 
-* Sun Sep 06 2020 Michal Schorm <mschorm@redhat.com> - 10.4.14-3
+* Sun Sep 06 2020 Michal Schorm <mschorm@redhat.com> - 3:10.4.14-3
 - Resolves: #1851605
 
-* Thu Sep 03 2020 Michal Schorm <mschorm@redhat.com> - 10.4.14-2
+* Thu Sep 03 2020 Michal Schorm <mschorm@redhat.com> - 3:10.4.14-2
 - Resolves: #1873999, #1874446
 
-* Thu Aug 20 2020 Michal Schorm <mschorm@redhat.com> - 10.4.14-1
+* Thu Aug 20 2020 Michal Schorm <mschorm@redhat.com> - 3:10.4.14-1
 - Rebase to 10.4.14
 
-* Tue Aug 18 2020 Michal Schorm <mschorm@redhat.com> - 10.4.13-7
+* Tue Aug 18 2020 Michal Schorm <mschorm@redhat.com> - 3:10.4.13-7
 - Do CMake out-of-source builds
 - Force the CMake change regarding the in-source builds also to F31 and F32
 - Use CMake macros instead of cmake & make direct commands
@@ -1773,16 +1773,16 @@ fi
 * Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 3:10.4.13-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
-* Tue Jul 14 2020 Michal Schorm <mschorm@redhat.com> - 10.4.13-3
+* Tue Jul 14 2020 Michal Schorm <mschorm@redhat.com> - 3:10.4.13-3
 - Make conflicts between corresponding mariadb and mysql packages explicit
 - Get rid of the Conflicts macro, it was intended to mark conflicts with
   *upstream* packages
 
-* Fri Jun 05 2020 Michal Schorm <mschorm@redhat.com> - 10.4.13-2
+* Fri Jun 05 2020 Michal Schorm <mschorm@redhat.com> - 3:10.4.13-2
 - Extend Perl "Requires" filtering to wsrep
   Resolves: #1845376
 
-* Fri Jun 05 2020 Michal Schorm <mschorm@redhat.com> - 10.4.13-1
+* Fri Jun 05 2020 Michal Schorm <mschorm@redhat.com> - 3:10.4.13-1
 - Rebase to 10.4.13
 
 * Sun May 24 2020 Lukas Javorsky <ljavorsk@redhat.com> - 3:10.4.12-6
@@ -1791,23 +1791,23 @@ fi
 * Thu Apr 02 2020 Björn Esser <besser82@fedoraproject.org> - 3:10.4.12-5
 - Fix string quoting for rpm >= 4.16
 
-* Thu Mar 26 2020 Jitka Plesnikova <jplesnik@redhat.com> - 10.4.12-4
+* Thu Mar 26 2020 Jitka Plesnikova <jplesnik@redhat.com> - 3:10.4.12-4
 - Add perl dependencies needed for tests
 
-* Mon Mar 16 2020 Michal Schorm <mschorm@redhat.com> - 10.4.12-3
+* Mon Mar 16 2020 Michal Schorm <mschorm@redhat.com> - 3:10.4.12-3
 - Rebase mariadb-connector-c git submodule to commit fbf1db6
   For fix: https://jira.mariadb.org/browse/CONC-441
 
-* Tue Mar 10 2020 Michal Schorm <mschorm@redhat.com> - 10.4.12-2
+* Tue Mar 10 2020 Michal Schorm <mschorm@redhat.com> - 3:10.4.12-2
 - Update the fix for building in the debug mode
 
-* Thu Feb 06 2020 Michal Schorm <mschorm@redhat.com> - 10.4.12-1
+* Thu Feb 06 2020 Michal Schorm <mschorm@redhat.com> - 3:10.4.12-1
 - Rebase to 10.4.12
 
 * Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 3:10.4.11-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
-* Fri Jan 17 2020 Michal Schorm <mschorm@redhat.com> - 10.4.11-1
+* Fri Jan 17 2020 Michal Schorm <mschorm@redhat.com> - 3:10.4.11-1
 - Rebase to 10.4.11
   Related: #1756468
 - Remove 'bench' subpackage. Upstream no longer maintains it.
@@ -1816,63 +1816,63 @@ fi
 - Tweak build flags
 - Add patch for auth_pam_tool directory
 
-* Fri Jan 10 2020 Michal Schorm <mschorm@redhat.com> - 10.3.21-1
+* Fri Jan 10 2020 Michal Schorm <mschorm@redhat.com> - 3:10.3.21-1
 - Rebase to 10.3.21
 
-* Mon Nov 18 2019 Lukas Javorsky <ljavorsk@redhat.com> - 10.3.20-3
+* Mon Nov 18 2019 Lukas Javorsky <ljavorsk@redhat.com> - 3:10.3.20-3
 - Change path of groonga's packaged files
 - Fix bz#1763287
 
-* Tue Nov 12 2019 Michal Schorm <mschorm@redhat.com> - 10.3.20-2
+* Tue Nov 12 2019 Michal Schorm <mschorm@redhat.com> - 3:10.3.20-2
 - Rebuild on top fo new mariadb-connector-c
 
-* Mon Nov 11 2019 Michal Schorm <mschorm@redhat.com> - 10.3.20-1
+* Mon Nov 11 2019 Michal Schorm <mschorm@redhat.com> - 3:10.3.20-1
 - Rebase to 10.3.20
 
-* Wed Nov 06 2019 Michal Schorm <mschorm@redhat.com> - 10.3.19-1
+* Wed Nov 06 2019 Michal Schorm <mschorm@redhat.com> - 3:10.3.19-1
 - Rebase to 10.3.19
 
 * Thu Oct 31 2019 Carl George <carl@george.computer> - 3:10.3.18-1
 - Rebase to 10.3.18
 
-* Wed Sep 11 2019 Michal Schorm <mschorm@redhat.com> - 10.3.17-3
+* Wed Sep 11 2019 Michal Schorm <mschorm@redhat.com> - 3:10.3.17-3
 - Disable building of the ed25519 client plugin.
   From now on it will be shipped by 'mariadb-connector-c' package
 
-* Fri Sep 06 2019 Michal Schorm <mschorm@redhat.com> - 10.3.17-2
+* Fri Sep 06 2019 Michal Schorm <mschorm@redhat.com> - 3:10.3.17-2
 - Fix the debug build
 
-* Thu Aug 01 2019 Michal Schorm <mschorm@redhat.com> - 10.3.17-1
+* Thu Aug 01 2019 Michal Schorm <mschorm@redhat.com> - 3:10.3.17-1
 - Rebase to 10.3.17
 
 * Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 3:10.3.16-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
-* Tue Jun 18 2019 Michal Schorm <mschorm@redhat.com> - 10.3.16-1
+* Tue Jun 18 2019 Michal Schorm <mschorm@redhat.com> - 3:10.3.16-1
 - Rebase to 10.3.16
 - Added patch for armv7hl builds of spider SE
 
-* Tue Jun 11 2019 Michal Schorm <mschorm@redhat.com> - 10.3.15-1
+* Tue Jun 11 2019 Michal Schorm <mschorm@redhat.com> - 3:10.3.15-1
 - Rebase to 10.3.15
 - CVEs fixed:
   CVE-2019-2510 CVE-2019-2537
 - CVEs fixed:
   CVE-2019-2614 CVE-2019-2627 CVE-2019-2628
 
-* Tue Jun 11 2019 Michal Schorm <mschorm@redhat.com> - 10.3.12-15
+* Tue Jun 11 2019 Michal Schorm <mschorm@redhat.com> - 3:10.3.12-15
 - Remove Cassandra subpackage; it is no longer developed
 
-* Thu Mar 21 2019 Michal Schorm <mschorm@redhat.com> - 10.3.12-14
+* Thu Mar 21 2019 Michal Schorm <mschorm@redhat.com> - 3:10.3.12-14
 - Fix building of TokuDB with Jemalloc 5
 - Fix building with / without lz4
 
-* Thu Mar 21 2019 Michal Schorm <mschorm@redhat.com> - 10.3.12-13
+* Thu Mar 21 2019 Michal Schorm <mschorm@redhat.com> - 3:10.3.12-13
 - Add patch for mysqld_safe --dry-run
 
-* Wed Mar 20 2019 Michal Schorm <mschorm@redhat.com> - 10.3.12-12
+* Wed Mar 20 2019 Michal Schorm <mschorm@redhat.com> - 3:10.3.12-12
 - Add patch for server pkgconfig file location
 
-* Sat Feb 23 2019 Pavel Raiskup <praiskup@redhat.com> - 10.3.12-11
+* Sat Feb 23 2019 Pavel Raiskup <praiskup@redhat.com> - 3:10.3.12-11
 - conditionally depend on selinux-policy-targeted again (rhbz#1665643)
 
 * Mon Feb 11 2019 Michal Schorm <mschorm@redhat.com> - 3:10.3.12-10
