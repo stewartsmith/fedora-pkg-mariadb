@@ -594,7 +594,7 @@ This plugin includes support for Kerberos on Unix.
 Summary:          PAM authentication plugin for the MariaDB server
 
 Requires:         %{name}-server%{?_isa} = %{sameevr}
-# This subpackage NEED the 'mysql' user/group (created during mariadb-server %pre) to be available prior installation
+# This subpackage NEED the 'mysql' user/group (created during mariadb-server %%pre) to be available prior installation
 Requires(pre):    %{name}-server%{?_isa} = %{sameevr}
 
 BuildRequires:    pam-devel
