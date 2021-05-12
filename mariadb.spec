@@ -161,7 +161,7 @@
 
 Name:             mariadb
 Version:          10.5.10
-Release:          1%{?with_debug:.debug}%{?dist}
+Release:          2%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1681,6 +1681,9 @@ fi
 %endif
 
 %changelog
+* Wed May 12 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.10-2
+- Use modified sources instead of the upstream original ones
+
 * Tue May 11 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.10-1
 - Rebase to 10.5.10
 
