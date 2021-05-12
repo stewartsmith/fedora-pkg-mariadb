@@ -756,7 +756,7 @@ find . -name "*.jar" -type f -exec rm --verbose -f {} \;
 # Remove testsuite for the mariadb-connector-c
 rm -rf libmariadb/unittest
 # Remove python scripts remains from tokudb upstream (those files are not used anyway)
-rm -r storage/tokudb/mysql-test/tokudb/t/*.py
+rm -rf storage/tokudb/mysql-test/tokudb/t/*.py
 %if %{without rocksdb}
 rm -r storage/rocksdb/
 %endif
