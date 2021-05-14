@@ -863,6 +863,7 @@ fi
          -DPLUGIN_SPHINX=%{?with_sphinx:DYNAMIC}%{!?with_sphinx:NO} \
          -DPLUGIN_CONNECT=%{?with_connect:DYNAMIC}%{!?with_connect:NO} \
          -DPLUGIN_S3=%{?with_s3:DYNAMIC}%{!?with_s3:NO} \
+         -DPLUGIN_COLUMNSTORE=NO \
          -DPLUGIN_CLIENT_ED25519=OFF \
          -DPYTHON_SHEBANG=%{python_path} \
          -DPLUGIN_CACHING_SHA2_PASSWORD=%{?with_clibrary:DYNAMIC}%{!?with_clibrary:OFF} \
