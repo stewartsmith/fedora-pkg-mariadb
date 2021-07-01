@@ -15,7 +15,7 @@
 # The last version on which the full testsuite has been run
 # In case of further rebuilds of that version, don't require full testsuite to be run
 # run only "main" suite
-%global last_tested_version 10.5.10
+%global last_tested_version 10.5.11
 # Set to 1 to force run the testsuite even if it was already tested in current version
 %global force_run_testsuite 0
 
@@ -153,8 +153,8 @@
 %global sameevr   %{epoch}:%{version}-%{release}
 
 Name:             mariadb
-Version:          10.5.10
-Release:          2%{?with_debug:.debug}%{?dist}
+Version:          10.5.11
+Release:          1%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1635,6 +1635,9 @@ fi
 %endif
 
 %changelog
+* Thu Jul 01 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.11-1
+- Rebase to 10.5.11
+
 * Wed May 12 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.10-2
 - Use modified sources instead of the upstream original ones
 
