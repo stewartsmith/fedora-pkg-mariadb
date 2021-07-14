@@ -154,7 +154,7 @@
 
 Name:             mariadb
 Version:          10.5.11
-Release:          1%{?with_debug:.debug}%{?dist}
+Release:          2%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1635,6 +1635,9 @@ fi
 %endif
 
 %changelog
+* Wed Jul 14 2021 Lukas Javorsky <ljavorsk@redhat.com> - 3:10.5.11-2
+- Rebuild against pcre2-10.37 (bug #1965025)
+
 * Thu Jul 01 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.11-1
 - Rebase to 10.5.11
 
