@@ -154,7 +154,7 @@
 
 Name:             mariadb
 Version:          10.5.11
-Release:          3%{?with_debug:.debug}%{?dist}
+Release:          4%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -162,7 +162,7 @@ URL:              http://mariadb.org
 License:          GPLv2 and LGPLv2
 
 # Original upstream sources archive URL
-# Source0:          https://downloads.mariadb.org/interstitial/mariadb-%{version}/source/mariadb-%{version}.tar.gz
+# Source0:          https://downloads.mariadb.org/interstitial/mariadb-%%{version}/source/mariadb-%%{version}.tar.gz
 # Non-existent URL containing correct archive name
 #   The archive was created by executing the "generate-modified-sources.sh" script
 Source0:          https://fedoraproject.org/mariadb-%{version}-downstream_modified.tar.gz
@@ -1547,7 +1547,7 @@ fi
 # SUID-to-root binary. Access MUST be restricted (https://jira.mariadb.org/browse/MDEV-25126)
 %attr(4750,root,mysql) %{_libdir}/%{pkg_name}/plugin/auth_pam_tool_dir/auth_pam_tool
 %{_libdir}/security/pam_user_map.so
-%{_sysconfdir}/security/user_map.conf
+%config(noreplace) %{_sysconfdir}/security/user_map.conf
 %endif
 
 %if %{with sphinx}
@@ -1635,6 +1635,10 @@ fi
 %endif
 
 %changelog
+* Tue Aug 03 2021 Lukas Javorsky <ljavorsk@redhat.com> - 3:10.5.11-4
+- Set user_map.conf file to be noreplace config file
+- Related: BZ#1989534
+
 * Thu Jul 22 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3:10.5.11-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
