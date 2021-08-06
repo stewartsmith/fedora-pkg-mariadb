@@ -778,7 +778,7 @@ pcre_version=`grep -e "ftp.pcre.org/pub/pcre/pcre2" cmake/pcre.cmake | sed -r "s
 # Check if the PCRE version in macro 'pcre_bundled_version', used in Provides: bundled(...), is the same version as upstream actually bundles
 %if %{without unbundled_pcre}
 if [ %{pcre_bundled_version} != "$pcre_version" ] ; then
-  echo "\n Error: Bundled PCRE version is not correct. \n\tBundled version number:%{pcre_bundled_version} \n\tUpstream version number: $pcre_version\n"
+  echo -e "\n Error: Bundled PCRE version is not correct. \n\tBundled version number:%{pcre_bundled_version} \n\tUpstream version number: $pcre_version\n"
   exit 1
 fi
 %else
@@ -786,7 +786,7 @@ fi
 pcre_system_version=`pkgconf %{_libdir}/pkgconfig/libpcre2-*.pc --modversion 2>/dev/null | head -n 1`
 
 if [ "$pcre_system_version" != "$pcre_version" ] ; then
-  echo "\n Warning: Error: Bundled PCRE version is not correct. \n\tSystem version number:$pcre_system_version \n\tUpstream version number: $pcre_version\n"
+  echo -e "\n Warning: Error: Bundled PCRE version is not correct. \n\tSystem version number:$pcre_system_version \n\tUpstream version number: $pcre_version\n"
 fi
 %endif
 
@@ -1222,14 +1222,14 @@ export MTR_BUILD_THREAD=$(( $(date +%s) % 1100 ))
   if [[ "%{last_tested_version}" == "%{version}" ]] && [[ %{force_run_testsuite} -eq 0 ]]
   then
     # in further rebuilds only run the basic "main" suite (~800 tests)
-    echo "running only base testsuite"
+    echo -e "\n\nRunning just the base testsuite\n\n"
     perl ./mysql-test-run.pl $common_testsuite_arguments --ssl --suite=main --mem --skip-test-list=unstable-tests
   fi
 
   # If either this version wasn't marked as tested yet or I explicitly want to run the testsuite, run everything we have (~4000 test)
   if [[ "%{last_tested_version}" != "%{version}" ]] || [[ %{force_run_testsuite} -ne 0 ]]
   then
-    echo "running advanced testsuite"
+    echo -e "\n\nRunning the advanced testsuite\n\n"
     perl ./mysql-test-run.pl $common_testsuite_arguments --ssl --big-test --skip-test=spider \
     %if %{ignore_testsuite_result}
       --max-test-fail=9999 || :
