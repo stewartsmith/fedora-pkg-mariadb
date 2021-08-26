@@ -154,7 +154,7 @@
 
 Name:             mariadb
 Version:          10.5.12
-Release:          1%{?with_debug:.debug}%{?dist}
+Release:          2%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -217,6 +217,8 @@ Patch10:          %{pkgnamepatch}-ssl-cipher-tests.patch
 Patch11:          %{pkgnamepatch}-pcdir.patch
 #   Patch15:  Add option to edit groonga's and groonga-normalizer-mysql install path
 Patch15:          %{pkgnamepatch}-groonga.patch
+#   Patch16:  Fix port bug in mysql_setpermission perl script
+Patch16:          %{pkgnamepatch}-scripts-setpermission.patch
 
 BuildRequires:    make
 BuildRequires:    cmake gcc-c++
@@ -745,6 +747,7 @@ rm -r storage/rocksdb/
 %patch10 -p1
 %patch11 -p1
 %patch15 -p1
+%patch16 -p1
 
 # generate a list of tests that fail, but are not disabled by upstream
 cat %{SOURCE50} | tee -a mysql-test/unstable-tests
@@ -1635,6 +1638,9 @@ fi
 %endif
 
 %changelog
+* Thu Aug 26 2021 Marek Kulik <mkulik@redhat.com> - 3:10.5.12-2
+- Add patch for mysql_setpermissions: BZ#1976224
+
 * Sat Aug 07 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.12-1
 - Rebase to 10.5.12
 
