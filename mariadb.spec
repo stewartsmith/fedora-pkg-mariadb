@@ -154,7 +154,7 @@
 
 Name:             mariadb
 Version:          10.5.12
-Release:          2%{?with_debug:.debug}%{?dist}
+Release:          3%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1638,6 +1638,9 @@ fi
 %endif
 
 %changelog
+* Tue Sep 14 2021 Sahana Prasad <sahana@redhat.com> - 3:10.5.12-3
+- Rebuilt with OpenSSL 3.0.0
+
 * Thu Aug 26 2021 Marek Kulik <mkulik@redhat.com> - 3:10.5.12-2
 - Add patch for mysql_setpermissions: BZ#1976224
 
