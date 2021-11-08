@@ -1,0 +1,17 @@
+# based on https://lists.launchpad.net/maria-discuss/msg06133.html discussion
+# are the invalid xmls (except for Index.xml) present in the sources on purpose
+# and they can be removed from xmllint rpminspect check in the CI process.
+#
+# A bug report [https://jira.mariadb.org/browse/MDEV-26905] was created for the
+# Index.xml file.
+#
+# Fedora CI picks up the rpmlimspect.yaml for specific package in the dist-git repo
+#[ref: https://rpminspect.readthedocs.io/en/latest/configuration.html#rpminspect-yaml]
+#
+xml:
+  ignore:
+    - /usr/share/mysql-test/std_data/loadxml.dat
+    - /usr/share/mysql-test/std_data/loaddata/mdev9874.xml
+    - /usr/share/mysql-test/std_data/ldml/Index.xml
+    - /usr/share/mysql-test/plugin/sphinx/sphinx/testdata.xml
+    - /usr/share/mysql-test/plugin/connect/connect/std_data/nocs.xml
