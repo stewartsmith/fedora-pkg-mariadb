@@ -15,3 +15,27 @@ xml:
     - /usr/share/mysql-test/std_data/ldml/Index.xml
     - /usr/share/mysql-test/plugin/sphinx/sphinx/testdata.xml
     - /usr/share/mysql-test/plugin/connect/connect/std_data/nocs.xml
+
+# ignore bad functions in resolveip binary, based on BZ1973194
+# all forbidden functions listed in main rpminspect config
+# have to be menioned also here, else it would not be checked for them
+badfuncs:
+    - gethostbyname
+    - gethostbyname2
+    - gethostbyaddr
+    - inet_addr
+    - inet_aton
+    - inet_nsap_addr
+    - inet_ntoa
+    - inet_nsap_ntoa
+    - inet_makeaddr
+    - inet_netof
+    - inet_network
+    - inet_neta
+    - inet_net_ntop
+    - inet_net_pton
+    - rcmd
+    - rexec
+    - rresvport
+    ignore:
+        - /usr/bin/resolveip
