@@ -204,6 +204,10 @@ Source71:         LICENSE.clustercheck
 # https://jira.mariadb.org/browse/MDEV-12646
 Source72:         mariadb-server-galera.te
 
+#   Patch1: OpenSSL 3 patch
+#   Picked from the upstream developement branch for MariaDB 10.8.
+#   https://jira.mariadb.org/browse/MDEV-25785
+Patch1:           %{pkgnamepatch}-openssl3.patch
 #   Patch4: Red Hat distributions specific logrotate fix
 #   it would be big unexpected change, if we start shipping it now. Better wait for MariaDB 10.2
 Patch4:           %{pkgnamepatch}-logrotate.patch
@@ -741,6 +745,9 @@ rm -r storage/rocksdb/
 
 
 
+%if 0%{?fedora} >= 35 || 0%{?rhel} >= 9
+%patch1 -p1
+%endif
 %patch4 -p1
 %patch7 -p1
 %patch9 -p1
