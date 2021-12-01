@@ -803,11 +803,6 @@ fi
 
 
 %build
-# This package has static probe points which do not currently
-# work with LTO and result in undefined symbols at link time.
-# This is being worked on in upstream GCC
-%define _lto_cflags %{nil}
-
 # fail quickly and obviously if user tries to build as root
 %if %runselftest
     if [ x"$(id -u)" = "x0" ]; then
