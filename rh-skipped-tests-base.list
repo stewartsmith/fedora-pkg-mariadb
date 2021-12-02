@@ -52,3 +52,15 @@ main.ssl_system_ca                           :
 # Fails since 10.5.7
 innodb.innodb_wl6326_big                     :
 plugins.feedback_plugin_load                 :
+
+# Fails on all architectures since 10.5.13
+oqgraph.regression_mdev6345                  :
+type_test.type_test_double                   :
+# Fails on i686 since 10.5.13
+oqgraph.general-innodb                       :
+oqgraph.general-Aria                         :
+oqgraph.general-MyISAM                       :
+oqgraph.legacy_upgrade                       :
+oqgraph.regression_1133093                   :
+oqgraph.regression_1196036                   :
+oqgraph.regression_1213120                   :

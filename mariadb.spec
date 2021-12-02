@@ -15,7 +15,7 @@
 # The last version on which the full testsuite has been run
 # In case of further rebuilds of that version, don't require full testsuite to be run
 # run only "main" suite
-%global last_tested_version 10.5.12
+%global last_tested_version 10.5.13
 # Set to 1 to force run the testsuite even if it was already tested in current version
 %global force_run_testsuite 0
 
@@ -153,8 +153,8 @@
 %global sameevr   %{epoch}:%{version}-%{release}
 
 Name:             mariadb
-Version:          10.5.12
-Release:          3%{?with_debug:.debug}%{?dist}
+Version:          10.5.13
+Release:          1%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -221,8 +221,6 @@ Patch11:          %{pkgnamepatch}-pcdir.patch
 Patch12:           %{pkgnamepatch}-openssl3.patch
 #   Patch15:  Add option to edit groonga's and groonga-normalizer-mysql install path
 Patch15:          %{pkgnamepatch}-groonga.patch
-#   Patch16:  Fix port bug in mysql_setpermission perl script
-Patch16:          %{pkgnamepatch}-scripts-setpermission.patch
 
 BuildRequires:    make
 BuildRequires:    cmake gcc-c++
@@ -754,7 +752,6 @@ rm -r storage/rocksdb/
 %patch12 -p1
 %endif
 %patch15 -p1
-%patch16 -p1
 
 # generate a list of tests that fail, but are not disabled by upstream
 cat %{SOURCE50} | tee -a mysql-test/unstable-tests
@@ -1648,6 +1645,9 @@ fi
 %endif
 
 %changelog
+* Thu Dec 02 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.13-1
+- Rebase to 10.5.13
+
 * Tue Sep 14 2021 Sahana Prasad <sahana@redhat.com> - 3:10.5.12-3
 - Rebuilt with OpenSSL 3.0.0
 
