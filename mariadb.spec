@@ -785,7 +785,7 @@ pcre_version=`grep -e "https://github.com/PhilipHazel/pcre2/releases/download" c
 # Check if the PCRE version in macro 'pcre_bundled_version', used in Provides: bundled(...), is the same version as upstream actually bundles
 %if %{without unbundled_pcre}
 if [ %{pcre_bundled_version} != "$pcre_version" ] ; then
-  echo -e "\n Error: Bundled PCRE version is not correct. \n\tBundled version number:%{pcre_bundled_version} \n\tUpstream version number: $pcre_version\n"
+  echo -e "\n Error: Bundled PCRE version is not correct. \n\tBundled version number: %{pcre_bundled_version} \n\tUpstream version number: $pcre_version\n"
   exit 1
 fi
 %else
@@ -793,7 +793,7 @@ fi
 pcre_system_version=`pkgconf %{_libdir}/pkgconfig/libpcre2-*.pc --modversion 2>/dev/null | head -n 1`
 
 if [ "$pcre_system_version" != "$pcre_version" ] ; then
-  echo -e "\n Warning: Error: Bundled PCRE version is not correct. \n\tSystem version number:$pcre_system_version \n\tUpstream version number: $pcre_version\n"
+  echo -e "\n Warning: Error: Bundled PCRE version is not correct. \n\tSystem version number: $pcre_system_version \n\tUpstream version number: $pcre_version\n"
 fi
 %endif
 
