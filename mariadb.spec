@@ -865,6 +865,8 @@ fi
          -DPLUGIN_SPHINX=%{?with_sphinx:DYNAMIC}%{!?with_sphinx:NO} \
          -DPLUGIN_CONNECT=%{?with_connect:DYNAMIC}%{!?with_connect:NO} \
          -DPLUGIN_S3=%{?with_s3:DYNAMIC}%{!?with_s3:NO} \
+         -DPLUGIN_AUTH_PAM=%{?with_pam:YES}%{!?with_pam:NO} \
+         -DPLUGIN_AUTH_PAM_V1=%{?with_pam:DYNAMIC}%{!?with_pam:NO} \
          -DPLUGIN_COLUMNSTORE=NO \
          -DPLUGIN_CLIENT_ED25519=OFF \
          -DPYTHON_SHEBANG=%{python_path} \
@@ -1060,7 +1062,9 @@ rm %{buildroot}%{logrotateddir}/mysql
 rm -r %{buildroot}%{_datadir}/%{pkg_name}/policy/apparmor
 
 # Buildroot does not have symlink /lib64 --> /usr/lib64
+%if %{with pam}
 mv %{buildroot}/%{_lib}/security %{buildroot}%{_libdir}
+%endif
 
 # Disable plugins
 %if %{with gssapi}
