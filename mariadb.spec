@@ -780,7 +780,7 @@ sed 's/mariadb-server-galera/%{name}-server-galera/' %{SOURCE72} > selinux/%{nam
 
 
 # Get version of PCRE, that upstream use
-pcre_version=`grep -e "ftp.pcre.org/pub/pcre/pcre2" cmake/pcre.cmake | sed -r "s;[^0123456789]*2-([[:digit:]]+\.[[:digit:]]+)\.[^0123456789]*;\1;"`
+pcre_version=`grep -e "https://github.com/PhilipHazel/pcre2/releases/download" cmake/pcre.cmake | sed -r "s;.*pcre2-([[:digit:]]+\.[[:digit:]]+).*;\1;" `
 
 # Check if the PCRE version in macro 'pcre_bundled_version', used in Provides: bundled(...), is the same version as upstream actually bundles
 %if %{without unbundled_pcre}
