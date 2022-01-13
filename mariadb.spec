@@ -1174,7 +1174,6 @@ rm %{buildroot}/suite/plugins/pam/pam_mariadb_mtr.so
 rm %{buildroot}%{_sysconfdir}/sysconfig/clustercheck
 rm %{buildroot}%{_bindir}/{clustercheck,galera_new_cluster}
 rm %{buildroot}%{_bindir}/galera_recovery
-rm %{buildroot}%{_datadir}/%{pkg_name}/systemd/use_galera_new_cluster.conf
 %endif
 
 %if %{without rocksdb}
