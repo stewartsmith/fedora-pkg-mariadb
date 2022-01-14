@@ -1137,6 +1137,8 @@ rm %{buildroot}%{_mandir}/man1/msql2mysql.1*
 rm %{buildroot}%{_mandir}/man1/{mysql,mariadb}.1*
 rm %{buildroot}%{_mandir}/man1/mysql{access,admin,binlog,check,dump,_find_rows,import,_plugin,show,slap,_waitpid}.1*
 rm %{buildroot}%{_mandir}/man1/mariadb-{access,admin,binlog,check,dump,find-rows,import,plugin,show,slap,waitpid}.1*
+
+rm %{buildroot}%{_sysconfdir}/my.cnf.d/mysql-clients.cnf
 %endif
 
 %if %{without config}
