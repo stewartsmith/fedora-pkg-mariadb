@@ -1162,13 +1162,15 @@ rm %{buildroot}%{_bindir}/{mariadb-client-test-embedded,mariadb-test-embedded}
 rm %{buildroot}%{_mandir}/man1/{mysql_client_test_embedded,mysqltest_embedded}.1*
 rm %{buildroot}%{_mandir}/man1/{mariadb-client-test-embedded,mariadb-test-embedded}.1*
 %endif # embedded
+%if %{with pam}
+rm %{buildroot}/suite/plugins/pam/mariadb_mtr
+rm %{buildroot}/suite/plugins/pam/pam_mariadb_mtr.so
+%endif # pam
 rm %{buildroot}%{_bindir}/{mysql_client_test,mysqltest}
 rm %{buildroot}%{_bindir}/{mariadb-client-test,mariadb-test}
 rm %{buildroot}%{_mandir}/man1/{mysql_client_test,mysqltest,my_safe_process}.1*
 rm %{buildroot}%{_mandir}/man1/{mariadb-client-test,mariadb-test}.1*
 rm %{buildroot}%{_mandir}/man1/{mysql-test-run,mysql-stress-test}.pl.1*
-rm %{buildroot}/suite/plugins/pam/mariadb_mtr
-rm %{buildroot}/suite/plugins/pam/pam_mariadb_mtr.so
 %endif
 
 %if %{without galera}
