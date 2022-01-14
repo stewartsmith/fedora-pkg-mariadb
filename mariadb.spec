@@ -1156,6 +1156,7 @@ polish,portuguese,romanian,russian,serbian,slovak,spanish,swedish,ukrainian,hind
 
 %if %{without test}
 %if %{with embedded}
+rm %{buildroot}%{_bindir}/test-connect-t
 rm %{buildroot}%{_bindir}/{mysql_client_test_embedded,mysqltest_embedded}
 rm %{buildroot}%{_bindir}/{mariadb-client-test-embedded,mariadb-test-embedded}
 rm %{buildroot}%{_mandir}/man1/{mysql_client_test_embedded,mysqltest_embedded}.1*
