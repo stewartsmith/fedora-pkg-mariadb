@@ -154,7 +154,7 @@
 
 Name:             mariadb
 Version:          10.5.13
-Release:          1%{?with_debug:.debug}%{?dist}
+Release:          2%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1645,6 +1645,9 @@ fi
 %endif
 
 %changelog
+* Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 3:10.5.13-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
 * Thu Dec 02 2021 Michal Schorm <mschorm@redhat.com> - 3:10.5.13-1
 - Rebase to 10.5.13
 
