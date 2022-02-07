@@ -154,7 +154,7 @@
 
 Name:             mariadb
 Version:          10.5.13
-Release:          2%{?with_debug:.debug}%{?dist}
+Release:          3%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -221,6 +221,8 @@ Patch11:          %{pkgnamepatch}-pcdir.patch
 Patch12:           %{pkgnamepatch}-openssl3.patch
 #   Patch15:  Add option to edit groonga's and groonga-normalizer-mysql install path
 Patch15:          %{pkgnamepatch}-groonga.patch
+#   Patch16: Fix MD5 in FIPS mode
+Patch16:          %{pkgnamepatch}-fips.patch
 
 BuildRequires:    make
 BuildRequires:    cmake gcc-c++
@@ -752,6 +754,7 @@ rm -r storage/rocksdb/
 %patch12 -p1
 %endif
 %patch15 -p1
+%patch16 -p1
 
 # generate a list of tests that fail, but are not disabled by upstream
 cat %{SOURCE50} | tee -a mysql-test/unstable-tests
@@ -1649,6 +1652,10 @@ fi
 %endif
 
 %changelog
+* Mon Feb 07 2022 Honza Horak <hhorak@redhat.com> - 3:10.5.13-3
+- Fix md5 in FIPS mode with OpenSSL 3.0.0
+  Resolves: #2050541
+
 * Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 3:10.5.13-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
 
