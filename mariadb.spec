@@ -15,7 +15,7 @@
 # The last version on which the full testsuite has been run
 # In case of further rebuilds of that version, don't require full testsuite to be run
 # run only "main" suite
-%global last_tested_version 10.5.13
+%global last_tested_version 10.5.15
 # Set to 1 to force run the testsuite even if it was already tested in current version
 %global force_run_testsuite 0
 
@@ -153,8 +153,8 @@
 %global sameevr   %{epoch}:%{version}-%{release}
 
 Name:             mariadb
-Version:          10.5.13
-Release:          3%{?with_debug:.debug}%{?dist}
+Version:          10.5.15
+Release:          1%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -219,8 +219,6 @@ Patch11:          %{pkgnamepatch}-pcdir.patch
 #   Picked from the upstream developement branch for MariaDB 10.8.
 #   https://jira.mariadb.org/browse/MDEV-25785
 Patch12:           %{pkgnamepatch}-openssl3.patch
-#   Patch15:  Add option to edit groonga's and groonga-normalizer-mysql install path
-Patch15:          %{pkgnamepatch}-groonga.patch
 #   Patch16: Fix MD5 in FIPS mode
 Patch16:          %{pkgnamepatch}-fips.patch
 
@@ -753,7 +751,6 @@ rm -r storage/rocksdb/
 %if 0%{?fedora} >= 35 || 0%{?rhel} >= 9
 %patch12 -p1
 %endif
-%patch15 -p1
 %patch16 -p1
 
 # generate a list of tests that fail, but are not disabled by upstream
@@ -1652,6 +1649,9 @@ fi
 %endif
 
 %changelog
+* Sun Feb 20 2022 Michal Schorm <mschorm@redhat.com> - 3:10.5.15-1
+- Rebase to 10.5.15
+
 * Mon Feb 07 2022 Honza Horak <hhorak@redhat.com> - 3:10.5.13-3
 - Fix md5 in FIPS mode with OpenSSL 3.0.0
   Resolves: #2050541
