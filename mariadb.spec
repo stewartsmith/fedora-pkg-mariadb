@@ -744,7 +744,7 @@ rm -r storage/rocksdb/
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
-%if 0%{?fedora} >= 35 || 0%{?rhel} >= 9
+%if 0%{?fedora} >= 36 || 0%{?rhel} >= 9
 %patch12 -p1
 %patch16 -p1
 %endif
