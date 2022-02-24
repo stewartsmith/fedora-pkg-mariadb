@@ -746,8 +746,8 @@ rm -r storage/rocksdb/
 %patch11 -p1
 %if 0%{?fedora} >= 35 || 0%{?rhel} >= 9
 %patch12 -p1
-%endif
 %patch16 -p1
+%endif
 
 # generate a list of tests that fail, but are not disabled by upstream
 cat %{SOURCE50} | tee -a mysql-test/unstable-tests
