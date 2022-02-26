@@ -209,8 +209,6 @@ Patch7:           %{pkgnamepatch}-scripts.patch
 Patch9:           %{pkgnamepatch}-ownsetup.patch
 #   Patch10: Fix cipher name in the SSL Cipher name test
 Patch10:          %{pkgnamepatch}-ssl-cipher-tests.patch
-#   Patch11: Use PCDIR CMake option, if configured
-Patch11:          %{pkgnamepatch}-pcdir.patch
 #   Patch12: OpenSSL 3 patch
 #   Picked from the upstream developement branch for MariaDB 10.8.
 #   https://jira.mariadb.org/browse/MDEV-25785
@@ -743,7 +741,6 @@ rm -r storage/rocksdb/
 %patch7 -p1
 %patch9 -p1
 %patch10 -p1
-%patch11 -p1
 %if 0%{?fedora} >= 36 || 0%{?rhel} >= 9
 %patch12 -p1
 %patch16 -p1
@@ -833,7 +830,6 @@ fi
          -DINSTALL_SBINDIR=libexec \
          -DINSTALL_SCRIPTDIR=bin \
          -DINSTALL_SUPPORTFILESDIR=share/%{pkg_name} \
-         -DINSTALL_PCDIR=%{_lib}/pkgconfig \
          -DMYSQL_DATADIR="%{dbdatadir}" \
          -DMYSQL_UNIX_ADDR="/var/lib/mysql/mysql.sock" \
          -DTMPDIR=/var/tmp \
