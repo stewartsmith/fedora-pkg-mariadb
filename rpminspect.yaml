@@ -1,3 +1,11 @@
+# Set up global ignore list
+ignore:
+    # mysql-test/ directory contains an extensive test-suite of about 20.000 files;
+    # It is very time consuming to be fully analysed and the results aren't useful anyway
+    # It is expected the tests change during rebases, as the underlying functionality the test evolve
+    # Some of the tests contain broken or problematic code, however that is on purpose
+    - /usr/share/mysql-test/
+
 # based on https://lists.launchpad.net/maria-discuss/msg06133.html discussion
 # are the invalid xmls (except for Index.xml) present in the sources on purpose
 # and they can be removed from xmllint rpminspect check in the CI process.
