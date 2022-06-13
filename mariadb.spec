@@ -150,7 +150,7 @@
 
 Name:             mariadb
 Version:          10.5.16
-Release:          1%{?with_debug:.debug}%{?dist}
+Release:          2%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -1644,6 +1644,9 @@ fi
 %endif
 
 %changelog
+* Mon Jun 13 2022 Michal Schorm <mschorm@redhat.com> - 3:10.5.16-2
+- Release bump for rebuild
+
 * Mon May 23 2022 Michal Schorm <mschorm@redhat.com> - 3:10.5.16-1
 - Rebase to 10.5.16
 
