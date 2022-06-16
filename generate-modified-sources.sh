@@ -38,8 +38,8 @@ mv "${OLD_ARCHIVE_NAME}" "${NEW_ARCHIVE_NAME}"
 rm -r "${NEW_ARCHIVE_NAME}/storage/tokudb"
 
 # Pack the extracted files back to the archive
-
-tar -czf "${NEW_ARCHIVE_NAME}.tar.gz" "${NEW_ARCHIVE_NAME}"
+# ... in a way that will be reproducible so you can replicate results.
+find "${NEW_ARCHIVE_NAME}" -print0 | LC_ALL=C sort -z | tar -I "gzip -n" --mtime="$(TZ=UTC stat --format="%y" ${OLD_ARCHIVE_NAME}.tar.gz)" --no-recursion --sort=name --owner=0 --group=0 --numeric-owner --null -T - -cf "${NEW_ARCHIVE_NAME}.tar.gz"
 
 # Remove the decompressed original used to create the archive
 
